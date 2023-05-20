@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+   <head>
+     <css src="DamConsultants_BynderTheisens::css/bynder.css"/>
+     <css src="DamConsultants_BynderTheisens::css/select2.min.css"/>
+    <script src="DamConsultants_BynderTheisens::js/bynder-compactview-2-latest.js"/>
+     <script src="DamConsultants_BynderTheisens::js/byner-custom.js"/>
+   </head>
+</page>

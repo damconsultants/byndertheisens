@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">  
+   <menu>
+       <add id="DamConsultants_BynderTheisens::menu"
+           title="Theisens Sync. Log" module="DamConsultants_BynderTheisens"
+           sortOrder="10"
+           resource="Magento_Backend::content"
+           />
+           <!-- START: new node -->
+       <add id="DamConsultants_BynderTheisens::menu_item"
+           title="Action Log" module="DamConsultants_BynderTheisens"
+           sortOrder="10" parent="DamConsultants_BynderTheisens::menu"
+           action="bynder/index/grid"
+           resource="DamConsultants_BynderTheisens::menu_item"
+           />
+       <!-- END:   new node -->
+        <!-- START: new node -->
+       <add id="DamConsultants_BynderTheisens::menu_item1"
+           title="Theisens MetaProperty " module="DamConsultants_BynderTheisens"
+           sortOrder="10" parent="DamConsultants_BynderTheisens::menu"
+           action="bynder/index/metaproperty"
+           resource="DamConsultants_BynderTheisens::menu_item1"
+           />
+       <!-- END:   new node -->
+   </menu>
+</config> 
