@@ -8,6 +8,9 @@
 <div id="featchNullSKUToMagento" style="display:none;">
     <b><h3>Using this cron job, we are fetching all images from bynder which does not have any single images into magento product.</h3></b>
 </div>
+<div id="DeleteDataProduct" style="display:none;">
+    <b><h3>Using this cron job, we are fetching all images from bynderdam which does not have any single images into magento product.</h3></b>
+</div>
 <script>
     require(
         [
@@ -45,6 +48,11 @@
             var popup = modal(options, $('#featchNullSKUToMagento'));
             window.FeatchNullSKUToMagento = function() {
                 $('#featchNullSKUToMagento').modal('openModal');
+            };
+			
+			var popup = modal(options, $('#DeleteDataProduct'));
+            window.DeleteDataProduct = function() {
+                $('#DeleteDataProduct').modal('openModal');
             };
             
             

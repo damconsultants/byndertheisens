@@ -7,7 +7,7 @@
         <section id="bynderconfig" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Configuration</label>
             <tab>bynder_tab</tab>
-            <resource>DamConsultants_Bynder::config</resource>
+            <resource>DamConsultants_BynderTheisens::config</resource>
             <group id="bynder_credential" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>BynderTheisens Credential</label>
                 <field id="bynderdomain" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -87,6 +87,10 @@
             </group>
             <group id="configurable_cron" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1"  showInStore="0">
                 <label>Featch Null SKU To Magento</label>
+				<field id="fetch_enable" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Cron</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
                 <field id="configurable_cron_info" translate="label" type="button" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
                     <frontend_model>DamConsultants\BynderTheisens\Block\System\Config\FeatchNullSkuToMagento</frontend_model>
                 </field>
@@ -95,6 +99,9 @@
                     <source_model>DamConsultants\BynderTheisens\Model\Config\Source\Frequency</source_model>
                     <backend_model>DamConsultants\BynderTheisens\Model\Config\CronConfig</backend_model>
                     <comment>Select The Cron Frequency.</comment>
+					<depends>
+                        <field id="fetch_enable">1</field>
+                    </depends>
                 </field>
                 <field id="your_min_featch" translate="label" type="text" sortOrder="2" showInDefault="2" showInWebsite="1" showInStore="1">
                     <label>Enter Minutes</label>
@@ -102,6 +109,7 @@
                     <comment>Enter Your Only Number.</comment>
                     <depends>
                         <field id="frequency">E</field>
+						<field id="fetch_enable">1</field>
                     </depends>
                 </field>
                 <field id="time" translate="label comment" sortOrder="2" type="time" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -109,6 +117,7 @@
                     <comment>Select The Cron Start Time.</comment>
                     <depends>
                         <field id="frequency" separator=",">D,W,M</field>
+						<field id="fetch_enable">1</field>
                     </depends>
                 </field>
                 <!-- <comment>Select The Cron Frequency.</comment> -->
@@ -116,6 +125,10 @@
             </group>
             <group id="auto_add_bynder" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Auto Add Data Product</label>
+				<field id="auto_enable" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Cron</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
                  <field id="auto_add_bynder_info" translate="label" type="button" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
                     <frontend_model>DamConsultants\BynderTheisens\Block\System\Config\AutoAddDataProduct</frontend_model>
                 </field>
@@ -124,6 +137,9 @@
                     <source_model>DamConsultants\BynderTheisens\Model\Config\Source\Frequency</source_model>
                     <backend_model>DamConsultants\BynderTheisens\Model\Config\AutoSkuCronConfig</backend_model>
                     <comment>Select The Cron Frequency.</comment>
+					<depends>
+                        <field id="auto_enable">1</field>
+                    </depends>
                 </field>
                  <field id="your_min_auto_add_sku_frequency" translate="label" type="text" sortOrder="2" showInDefault="2" showInWebsite="1" showInStore="1">
                     <label>Enter Minutes</label>
@@ -131,6 +147,7 @@
                     <comment>Enter Your Only Number.</comment>
                     <depends>
                         <field id="auto_add_sku_frequency">E</field>
+						<field id="auto_enable">1</field>
                      </depends>
                 </field>
                 <field id="auto_add_sku_time" translate="label comment" sortOrder="2" type="time" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -138,10 +155,48 @@
                     <comment>Select The Cron Start Time.</comment>
                     <depends>
                         <field id="auto_add_sku_frequency" separator=",">D,W,M</field>
+						<field id="auto_enable">1</field>
                     </depends>
                 </field>
             </group>
-            <group id="auto_replace_bynder" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+			<group id="delete_cron_bynder" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                <label>Delete Data Product</label>
+				<field id="delete_enable" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable Cron</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+				<field id="delete_frequency" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Frequency</label>
+                    <source_model>DamConsultants\BynderTheisens\Model\Config\Source\Frequency</source_model>
+                    <backend_model>DamConsultants\BynderTheisens\Model\Config\DeleteCronConfig</backend_model>
+                    <comment>Select The Cron Frequency.</comment>
+					<depends>
+                        <field id="delete_enable">1</field>
+                     </depends>
+                </field>
+				<field id="your_min_delete_frequency" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enter Minutes</label>
+                    <validate>validate-digits</validate>
+                    <comment>Enter Your Only Number.</comment>
+                    <depends>
+                        <field id="delete_frequency">E</field>
+						<field id="delete_enable">1</field>
+                     </depends>
+                </field>
+                <field id="delete_time" translate="label comment" sortOrder="4" type="time" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Start Time</label>
+                    <comment>Select The Cron Start Time.</comment>
+                    <depends>
+                        <field id="delete_frequency" separator=",">D,W,M</field>
+						<field id="delete_enable">1</field>
+                    </depends>
+                </field>
+                <field id="delete_bynder_info" translate="label" type="button" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_model>DamConsultants\BynderTheisens\Block\System\Config\DeleteDataProduct</frontend_model>
+                </field>
+            </group>
+            
+            <!-- <group id="auto_replace_bynder" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Auto Replace Data Product</label>
                 <field id="auto_replace_bynder_info" translate="label" type="button" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
                     <frontend_model>DamConsultants\BynderTheisens\Block\System\Config\AutoReplaceDataProduct</frontend_model>
@@ -167,7 +222,7 @@
                         <field id="auto_replace_sku_frequency" separator=",">D,W,M</field>
                     </depends>
                 </field>
-            </group>    
+            </group>     -->
         </section>
         
     </system>

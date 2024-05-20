@@ -59,7 +59,7 @@ class AutoReplaceFormMagento
     /**
      * Execute
      *
-     * @return $this
+     * @return boolean
      */
     public function execute()
     {
@@ -68,12 +68,17 @@ class AutoReplaceFormMagento
         $logger->addWriter($writer);
         $logger->info("DamConsultants Bynder Add  Cron");
 
+
+        /*
         $productCollection = $this->attribute->getCollection();
         $productColl = $this->collectionFactory->create()
             ->addAttributeToSelect('*')
-            ->addAttributeToFilter('type_id', \Magento\Catalog\Model\Product\Type::TYPE_SIMPLE)
-            ->addAttributeToFilter('visibility', \Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH)
-            ->addAttributeToFilter('status', \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
+            ->addAttributeToFilter(
+                [
+                    ['attribute' => 'bynder_auto_replace', 'null' => true]
+                ]
+            )
+            ->load();
 
         $product_sku_limit = $this->datahelper->getProductSkuLimitConfig();
         if (!empty($product_sku_limit)) {
@@ -133,6 +138,8 @@ class AutoReplaceFormMagento
             }
         }
         return $this;
+        */
+        return true;
     }
     /**
      * Get Data Item

@@ -9,6 +9,62 @@ class Gallery extends \Magento\Backend\Block\Template
      * @var string
      */
     protected $_template = 'group/gallery.phtml';
+
+    /**
+     * Gallery
+     * @param \Magento\Backend\Block\Template\Context $context
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\ConfigurableProduct\Block\Adminhtml\Product\Steps\Bulk $bulk
+     * @param \Magento\Catalog\Helper\Image $image
+     * @param \Magento\Backend\Helper\Data $helperdata
+     * @param \DamConsultants\BynderTheisens\Helper $helper
+     */
+    public function __construct(
+        \Magento\Backend\Block\Template\Context $context,
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Magento\Framework\Registry $registry,
+        \Magento\ConfigurableProduct\Block\Adminhtml\Product\Steps\Bulk $bulk,
+        \Magento\Catalog\Helper\Image $image,
+        \Magento\Backend\Helper\Data $helperdata,
+        \DamConsultants\BynderTheisens\Helper\Data $helper
+    ) {
+        $this->_storeManager = $storeManager;
+        $this->_bulk = $bulk;
+        $this->_registry = $registry;
+        $this->_image = $image;
+        $this->_helperData = $helperdata;
+        $this->helper = $helper;
+        parent::__construct($context);
+    }
+    /**
+     * Get Image Roll
+     *
+     * @return $this
+     */
+    public function getBulkImageRoll()
+    {
+        return $this->_bulk->getMediaAttributes();
+    }
+    /**
+     * Get Image Roll
+     *
+     * @return $this
+     * @param string $currentProduct
+     */
+    public function getProduct($currentProduct)
+    {
+        return $this->_registry->registry($currentProduct);
+    }
+    /**
+     * Get Bynder Domain
+     *
+     * @return $this
+     */
+    public function getBynderDomain()
+    {
+        return $this->helper->getBynderDomain();
+    }
     /**
      * EntityId.
      *

@@ -56,7 +56,7 @@ class AutoSkuCronConfig extends \Magento\Framework\App\Config\Value
     {
         $time = $this->getData('groups/auto_add_bynder/fields/auto_add_sku_time/value');
         $frequency = $this->getData('groups/auto_add_bynder/fields/auto_add_sku_frequency/value');
-        $custom_time = $this->getConfigValue();
+        $custom_time = $this->getData('groups/auto_add_bynder/fields/your_min_auto_add_sku_frequency/value');;
         $every_min =  \DamConsultants\BynderTheisens\Model\Config\Source\Frequency::EVERY_TEN_TIME;
         if ($frequency == $every_min) {
             $cronExprArray = [

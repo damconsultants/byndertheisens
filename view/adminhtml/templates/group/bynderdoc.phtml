@@ -123,7 +123,7 @@ $formNameEscaped = $blockj->escapeHtmlAttr($blockj->getFormName());
 <script>
     var drag_img = "<?= $block->escapeHtml($block->getDrag()); ?>";
     var delete_icon = "<?= $block->escapeHtml($block->getDelete()); ?>";
-    
+    var add_temp_data = '<?= $block->escapeUrl($block->getBaseUrl()."bynder/product/adddocdata") ?>';
     jQuery(document).on('click','.bynder_url_doc button',function(){
         var old_selected_bynder_doc = [];
         
@@ -528,7 +528,25 @@ $formNameEscaped = $blockj->escapeHtmlAttr($blockj->getFormName());
                     var myJsonString = "";
                 }
                 jQuery('textarea[name="product[bynder_document]"]').val(myJsonString);
-                document.cookie = "bynder_doc=" + myJsonString + "; path=/;";
+                //document.cookie = "bynder_doc=" + myJsonString + "; path=/;";
+                var doc_coockie_id = 0;
+                try{
+                    doc_coockie_id = Cookies.get('doc_coockie_id');
+                }catch(err){
+                    document.cookie = "doc_coockie_id=" + coockie_id + "; path=/;";
+                }
+                var product_id = '<?= $block->escapeHtml($product_id); ?>';
+                $.ajax({
+                    url: add_temp_data,
+                    showLoader: true,
+                    data: {
+                        product_id: product_id,
+                        doc:myJsonString,
+                        doc_coockie_id:doc_coockie_id
+                    },
+                    success: function (res) {
+                    },
+                });
             })
 
             jQuery("#sortable tbody").sortable({

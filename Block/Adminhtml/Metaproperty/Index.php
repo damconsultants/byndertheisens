@@ -64,11 +64,11 @@ class Index extends \Magento\Backend\Block\Template
         $metadata = $this->_helperdata->getBynderMetaProperites();
         $data = json_decode($metadata, true);
         $response_data['message'] = "Success";
-        if ($data['status'] == 1) {
+        if (null !== $data && $data['status'] == 1) {
             $response_data['metadata'] = $data['data'];
         } else {
             $response_data['metadata'] = [];
-            $response_data['message'] = $data['data'];
+            $response_data['message'] = $data['data'] ?? "";
         }
 
         $collection = $this->_metaPropertyCollectionFactory->create();
@@ -96,7 +96,7 @@ class Index extends \Magento\Backend\Block\Template
             $response_data['image_role_selected'] = '0';
             $response_data['image_alt_text'] = '0';
         }
-        
+
         return $response_data;
     }
     /**

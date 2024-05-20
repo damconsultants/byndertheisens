@@ -8,17 +8,16 @@ namespace DamConsultants\BynderTheisens\Ui\Component\Listing\Column;
 use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 
-/**
- * Class Thumbnail
- *
- * @api
- * @since 100.0.2
- */
 class Thumbnail extends \Magento\Ui\Component\Listing\Columns\Column
 {
-    const NAME = 'thumbnail';
-
-    const ALT_FIELD = 'name';
+    /**
+     * @var $name
+     */
+    public const NAME = 'thumbnail';
+    /**
+     * @var $alt
+     */
+    public const ALT_FIELD = 'name';
 
     /**
      * @var \Magento\Catalog\Helper\Image
@@ -35,6 +34,7 @@ class Thumbnail extends \Magento\Ui\Component\Listing\Columns\Column
      * @param UiComponentFactory $uiComponentFactory
      * @param \Magento\Catalog\Helper\Image $imageHelper
      * @param \Magento\Framework\UrlInterface $urlBuilder
+     * @param \Magento\Catalog\Model\ProductRepository $ProductRepository
      * @param array $components
      * @param array $data
      */
@@ -52,7 +52,6 @@ class Thumbnail extends \Magento\Ui\Component\Listing\Columns\Column
         $this->urlBuilder = $urlBuilder;
         $this->_productRepository = $ProductRepository;
     }
-
     /**
      * Prepare Data Source
      *
@@ -64,28 +63,34 @@ class Thumbnail extends \Magento\Ui\Component\Listing\Columns\Column
         if (isset($dataSource['data']['items'])) {
             $fieldName = $this->getData('name');
             foreach ($dataSource['data']['items'] as & $item) {
-                $_product = $this->_productRepository->get($item['sku']);
+                $_product = $this->_productRepository->getById($item['entity_id']);
                 $image_value = $_product->getBynderMultiImg();
                 if (!empty($image_value)) {
                     $item_old_value = json_decode($image_value, true);
+                    if (null == $item_old_value) {
+                        continue;
+                    }
                     foreach ($item_old_value as $img) {
-                        if(isset($img['image_role']) && count($img['image_role']) > 0){
-                            foreach($img['image_role'] as $roll){
-                                if($roll == 'Small'){
+                        if (isset($img['image_role']) && count($img['image_role']) > 0) {
+                            foreach ($img['image_role'] as $roll) {
+                                if ($roll == 'Thumbnail') {
                                     $product = new \Magento\Framework\DataObject($item);
                                     $imageHelper = $this->imageHelper->init($product, 'product_listing_thumbnail');
                                     $item[$fieldName . '_src'] = $img['thum_url'];
                                     $item[$fieldName . '_link'] = $this->urlBuilder->getUrl(
                                         'catalog/product/edit',
-                                        ['id' => $product->getEntityId(), 'store' => $this->context->getRequestParam('store')]
+                                        [
+                                            'id' => $product->getEntityId(),
+                                            'store' => $this->context->getRequestParam('store')
+                                        ]
                                     );
-                                    $origImageHelper = $this->imageHelper->init($product, 'product_listing_thumbnail_preview');
+                                    $ogImgHp = $this->imageHelper->init($product, 'product_listing_thumbnail_preview');
                                     $item[$fieldName . '_orig_src'] = $img['thum_url'];
                                 }
                             }
                         }
                     }
-                    
+
                 } else {
                     $product = new \Magento\Framework\DataObject($item);
                     $imageHelper = $this->imageHelper->init($product, 'product_listing_thumbnail');
@@ -97,10 +102,9 @@ class Thumbnail extends \Magento\Ui\Component\Listing\Columns\Column
                     );
                     $origImageHelper = $this->imageHelper->init($product, 'product_listing_thumbnail_preview');
                     $item[$fieldName . '_orig_src'] = $origImageHelper->getUrl();
-                }  
+                }
             }
         }
-
         return $dataSource;
     }
 

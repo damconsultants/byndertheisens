@@ -62,12 +62,12 @@ class Remove extends \Magento\Ui\Component\Listing\Columns\Column
                 
                 if ($item) {
                     if ($item['remove_for_magento'] == 0) {
-                        $type ='Remove for Magento';
+                        $type ='No data';
                     } elseif ($item['remove_for_magento'] == 1) {
 
-                        $type = 'Not Remove for Magento';
+                        $type = 'Import into magento';
                     } else {
-                        $type = 'Change on BynderTheisens';
+                        $type = 'Change on Bynder';
                     }
                     $item['remove_for_magento'] = $type;
                 }

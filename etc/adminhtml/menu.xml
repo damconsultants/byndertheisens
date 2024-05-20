@@ -9,10 +9,18 @@
            />
            <!-- START: new node -->
        <add id="DamConsultants_BynderTheisens::menu_item"
-           title="Action Log" module="DamConsultants_BynderTheisens"
+           title="Cron Action Log" module="DamConsultants_BynderTheisens"
            sortOrder="10" parent="DamConsultants_BynderTheisens::menu"
            action="bynder/index/grid"
            resource="DamConsultants_BynderTheisens::menu_item"
+           />
+       <!-- END:   new node -->
+       <!-- START: new node -->
+       <add id="DamConsultants_BynderTheisens::menu_item2"
+           title="Synchronization Log" module="DamConsultants_BynderTheisens"
+           sortOrder="10" parent="DamConsultants_BynderTheisens::menu"
+           action="bynder/index/sync"
+           resource="DamConsultants_BynderTheisens::menu_item2"
            />
        <!-- END:   new node -->
         <!-- START: new node -->
@@ -21,6 +29,12 @@
            sortOrder="10" parent="DamConsultants_BynderTheisens::menu"
            action="bynder/index/metaproperty"
            resource="DamConsultants_BynderTheisens::menu_item1"
+           />
+		<add id="DamConsultants_BynderTheisens::menu_item4"
+           title="Delete Cron Action Log" module="DamConsultants_BynderTheisens"
+           sortOrder="10" parent="DamConsultants_BynderTheisens::menu"
+           action="bynder/index/deletecrongrid"
+           resource="DamConsultants_BynderTheisens::menu_item4"
            />
        <!-- END:   new node -->
    </menu>

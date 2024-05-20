@@ -141,8 +141,17 @@ class NewField extends AbstractModifier
     {
         $fieldCode = 'bynder_multi_img';
         $bynder = 'bynder_isMain';
+        $cronSync = 'bynder_cron_sync';
+        $autoReplace = 'bynder_auto_replace';
+		$deletecron = 'bynder_delete_cron';
         $path = $this->arrayManager->findPath($bynder, $meta, null, 'children');
+        $pathcron = $this->arrayManager->findPath($cronSync, $meta, null, 'children');
+        $pathauto = $this->arrayManager->findPath($autoReplace, $meta, null, 'children');
+		$pathdelete = $this->arrayManager->findPath($deletecron, $meta, null, 'children');
         $meta = $this->arrayManager->set("{$path}/arguments/data/config/visible", $meta, false);
+        $meta = $this->arrayManager->set("{$pathcron}/arguments/data/config/visible", $meta, false);
+        $meta = $this->arrayManager->set("{$pathauto}/arguments/data/config/visible", $meta, false);
+		$meta = $this->arrayManager->set("{$pathdelete}/arguments/data/config/visible", $meta, false);
         $elementPath = $this->arrayManager->findPath($fieldCode, $meta, null, 'children');
         $containerPath = $this->arrayManager->findPath(static::CONTAINER_PREFIX . $fieldCode, $meta, null, 'children');
         $fieldIsDisabled = $this->locator->getProduct()->isLockedAttribute($fieldCode);

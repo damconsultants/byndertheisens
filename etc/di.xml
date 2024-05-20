@@ -4,13 +4,27 @@
         <arguments>
             <argument name="collections" xsi:type="array">
                 <item name="bynder_index_listing_data_source" xsi:type="string">DamConsultants\BynderTheisens\Model\ResourceModel\Collection\Grid\Collection</item>
-            </argument>
+                <item name="bynder_index_sync_data_source" xsi:type="string">DamConsultants\BynderTheisens\Model\ResourceModel\Collection\Grid\BynderConfigSyncDataCollection</item>
+				<item name="bynder_index_delete_data_source" xsi:type="string">DamConsultants\BynderTheisens\Model\ResourceModel\Collection\Grid\BynderDeleteDataCollection</item>
+			</argument>
         </arguments>
     </type>
     <virtualType name="DamConsultants\BynderTheisens\Model\ResourceModel\Collection\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
         <arguments>
             <argument name="mainTable" xsi:type="string">bynder_data_product</argument>
             <argument name="resourceModel" xsi:type="string">DamConsultants\BynderTheisens\Model\ResourceModel\Bynder</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="DamConsultants\BynderTheisens\Model\ResourceModel\Collection\Grid\BynderConfigSyncDataCollection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">bynder_config_sync_data</argument>
+            <argument name="resourceModel" xsi:type="string">DamConsultants\BynderTheisens\Model\ResourceModel\BynderConfigSyncData</argument>
+        </arguments>
+    </virtualType>
+	<virtualType name="DamConsultants\BynderTheisens\Model\ResourceModel\Collection\Grid\BynderDeleteDataCollection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">bynder_delete_data</argument>
+            <argument name="resourceModel" xsi:type="string">DamConsultants\BynderTheisens\Model\ResourceModel\BynderDeleteData</argument>
         </arguments>
     </virtualType>
 </config>

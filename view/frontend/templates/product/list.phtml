@@ -1,3 +1,4 @@
+
 <?php
 /**
  * Copyright © Magento, Inc. All rights reserved.
@@ -14,7 +15,7 @@ use Magento\Framework\App\Action\Action;
  * @var \Magento\Framework\Escaper $escaper
  * @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer
  */
-$_objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$_obj = \Magento\Framework\App\ObjectManager::getInstance();
 ?>
 <?php
 $_productCollection = $block->getLoadedProductCollection();
@@ -48,13 +49,13 @@ $_helper = $block->getData('outputHelper');
     <div class="products wrapper <?= /* @noEscape */ $viewMode ?> products-<?= /* @noEscape */ $viewMode ?>">
         <ol class="products list items product-items">
             <?php /** @var $_product \Magento\Catalog\Model\Product */ ?>
-            <?php foreach ($_productCollection as $_product): 
-                if(!empty($_product->getBynderMultiImg())){
-                    $BynderImage = json_decode($_product->getBynderMultiImg(),true);
-                    foreach($BynderImage as $imageData) {
-                        if($imageData['item_type'] == 'IMAGE') { 
-                            if(isset($imageData['image_role'])) {
-                                foreach($imageData['image_role'] as $imgroll) {
+            <?php foreach ($_productCollection as $_product):
+                if (!empty($_product->getBynderMultiImg())) {
+                    $BynderImage = json_decode($_product->getBynderMultiImg(), true);
+                    foreach ($BynderImage as $imageData) {
+                        if ($imageData['item_type'] == 'IMAGE') {
+                            if (isset($imageData['image_role'])) {
+                                foreach ($imageData['image_role'] as $imgroll) {
                                     if ($imgroll ==  'Small') {
                                         $baseImage = $imageData['item_url'];
                                     }
@@ -68,7 +69,7 @@ $_helper = $block->getData('outputHelper');
                      id="product-item-info_<?= /* @noEscape */ $_product->getId() ?>"
                      data-container="product-<?= /* @noEscape */ $viewMode ?>">
                     <?php
-                    if(!empty($baseImage)){
+                    if (!empty($baseImage)) {
                         $productImage = $baseImage;
                     } else {
                         $productImage = $block->getImage($_product, $imageDisplayArea);
@@ -85,11 +86,11 @@ $_helper = $block->getData('outputHelper');
                     <a href="<?= $escaper->escapeUrl($_product->getProductUrl()) ?>"
                        class="product photo product-item-photo"
                        tabindex="-1">
-                       <?php if(empty($baseImage)) { ?>
+                    <?php if (empty($baseImage)) { ?>
                         <?= $productImage->toHtml() ?>
-                        <?php } else { ?>
-                            <img src="<?= $productImage ?>" alt="" />  
-                        <?php } ?>
+                    <?php } else { ?>
+                        <img src="<?= $escaper->escapeHtml($productImage) ?>" alt="" />  
+                    <?php } ?>
                     </a>
                     <div class="product details product-item-details">
                         <?php $_productNameStripped = $block->stripTags($_product->getName(), null, true); ?>
@@ -113,7 +114,8 @@ $_helper = $block->getData('outputHelper');
                                               data-product-sku="<?= $escaper->escapeHtml($_product->getSku()) ?>"
                                               action="<?= $escaper->escapeUrl($postParams['action']) ?>"
                                               method="post">
-                                            <?php $options = $_objectManager->get('Magento\Catalog\Model\Product\Option')->getProductOptionCollection($_product); ?>
+                                            <?php $option = $_obj->get(\Magento\Catalog\Model\Product\Option::class);
+                                                $options = $option->getProductOptionCollection($_product); ?>
                                             <?php foreach ($options as $optionItem): ?>
                                                 <input type="hidden"
                                                        name="<?= $escaper->escapeHtml($optionItem['name']) ?>"

@@ -65,8 +65,10 @@ class DataType extends \Magento\Ui\Component\Listing\Columns\Column
                         $type ='Image';
                     } elseif ($item['bynder_data_type'] == 2) {
                         $type = 'Document';
-                    } else {
+                    } elseif ($item['bynder_data_type'] == 3) {
                         $type = 'Video';
+                    } else {
+                        $type ="";
                     }
                     $item['bynder_data_type'] = $type;
                 }

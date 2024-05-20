@@ -57,7 +57,7 @@ class CronConfig extends \Magento\Framework\App\Config\Value
     {
         $time = $this->getData('groups/configurable_cron/fields/time/value');
         $frequency = $this->getData('groups/configurable_cron/fields/frequency/value');
-        $custom_time = $this->getConfigValue();
+        $custom_time = $this->getData('groups/configurable_cron/fields/your_min_featch/value');
         $every_min =  \DamConsultants\BynderTheisens\Model\Config\Source\Frequency::EVERY_TEN_TIME;
         if ($frequency == $every_min) {
             $cronExprArray = [

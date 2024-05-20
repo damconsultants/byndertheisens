@@ -148,29 +148,29 @@ class Gallery extends \Magento\Catalog\Block\Product\View\Gallery
      *
      * @return string
      */
-    
+
     public function getGalleryImagesJson()
     {
         $product = $this->_registry->registry('product');
-
+        $imagesItems = [];
         $use_bynder_cdn = $product->getData('use_bynder_cdn');
         $use_bynder_both_image = $product->getData('use_bynder_both_image');
         if ($use_bynder_both_image == 1) { /*Both Image*/
-            
+
             if (!empty($product->getData('bynder_multi_img'))) {
                 $bynder_image = $product->getData('bynder_multi_img');
                 $json_value = json_decode($bynder_image, true);
-                
+
                 $role_image = 0;
                 foreach ($json_value as $key => $values) {
                     $image_values =  trim($values['thum_url']);
-					if($values['item_type'] == 'IMAGE') {
-						foreach ($values['image_role'] as $image_role) {
-							if ($image_role ==  'Base') {
-								$role_image = 1;
-							}
-						}
-					}
+                    if ($values['item_type'] == 'IMAGE') {
+                        foreach ($values['image_role'] as $image_role) {
+                            if ($image_role ==  'Base') {
+                                $role_image = 1;
+                            }
+                        }
+                    }
                     $imageItem = new DataObject([
                         'thumb' => $image_values,
                         'img' => $image_values,

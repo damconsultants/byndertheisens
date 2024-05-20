@@ -58,7 +58,7 @@ class AutoReplaceSkuCronConfig extends \Magento\Framework\App\Config\Value
         $time = $this->getData('groups/auto_replace_bynder/fields/auto_replace_sku_time/value');
         $frequency = $this->getData('groups/auto_replace_bynder/fields/auto_replace_sku_frequency/value');
         $custom_time = $this->getConfigValue();
-        $every_min =  \DamConsultants\Bynder\Model\Config\Source\Frequency::EVERY_TEN_TIME;
+        $every_min =  \DamConsultants\BynderTheisens\Model\Config\Source\Frequency::EVERY_TEN_TIME;
         if ($frequency == $every_min) {
             $cronExprArray = [
                 '*/'.$custom_time, /*Minute*/
