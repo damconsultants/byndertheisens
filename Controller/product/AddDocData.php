@@ -36,7 +36,9 @@ class AddDocData extends \Magento\Framework\App\Action\Action
         \Magento\Store\Model\StoreManagerInterface $storeManagerInterface,
         \Magento\Framework\Registry $registry,
         \Magento\Framework\App\ResourceConnection $resource,
-        \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory $cookieMetadataFactory
+        \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory $cookieMetadataFactory,
+		\DamConsultants\BynderTheisens\Model\BynderTempDocDataFactory $bynderTempDocData,
+        \DamConsultants\BynderTheisens\Model\ResourceModel\Collection\BynderTempDocDataCollectionFactory $bynderTempDocDataCollectionFactory,
     ) {
         $this->_pageFactory = $pageFactory;
         $this->_product = $product;
@@ -49,6 +51,8 @@ class AddDocData extends \Magento\Framework\App\Action\Action
         $this->_registry = $registry;
         $this->_resource = $resource;
         $this->cookieMetadataFactory = $cookieMetadataFactory;
+		$this->bynderTempDocData = $bynderTempDocData;
+        $this->bynderTempDocDataCollectionFactory = $bynderTempDocDataCollectionFactory;
         return parent::__construct($context);
     }
     /**
@@ -58,40 +62,50 @@ class AddDocData extends \Magento\Framework\App\Action\Action
      */
     public function execute()
     {
-        $connection = $this->_resource->getConnection();
-        $table_name = $connection->getTableName('bynder_temp_doc_data');
         $product_id = $this->getRequest()->getParam('product_id');
         $coockie_id = $this->getRequest()->getParam('doc_coockie_id');
-        $widen_doc = $this->getRequest()->getParam('doc');
+        $bynder_doc = $this->getRequest()->getParam('doc');
         if ($coockie_id == 0) {
             $data = [
-                "value" => $widen_doc,
+                "value" => $bynder_doc,
                 "product_id" => $product_id
             ];
-            $connection->insert($table_name, $data);
-            $lastAddedId = $connection->lastInsertId($table_name);
+			$bynderTempDocData = $this->bynderTempDocData->create();
+			$bynderTempDocData->setData($data);
+			$bynderTempDocData->save();
+			$collectionData = $this->bynderTempDocDataCollectionFactory->create()->load();
+			if(!empty($collectionData)){
+				$lastAddedId = "";
+				foreach($collectionData as $data) {
+					$lastAddedId = $data['id'];
+				}
+			}
         } else {
-            $select = $connection->select()
-            ->from(
-                ['c' => $table_name],
-                ['*']
-            )
-            ->where("c.product_id = ?", $product_id);
-            $records = $connection->fetchAll($select);
+			$records = $this->bynderTempDocDataCollectionFactory->create()->addFieldToFilter('product_id', ['eq' => [$product_id]])->load();
             if (empty($records)) {
                 $data = [
-                    "value" => $widen_doc,
+                    "value" => $bynder_doc,
                     "product_id" => $product_id
                 ];
-                $connection->insert($table_name, $data);
-                $lastAddedId = $connection->lastInsertId($table_name);
+				$bynderTempDocData = $this->bynderTempDocData->create();
+				$bynderTempDocData->setData($data);
+				$bynderTempDocData->save();
+				$collectionData = $this->bynderTempDocDataCollectionFactory->create()->load();
+				if(!empty($collectionData)){
+					$lastAddedId = "";
+					foreach($collectionData as $data) {
+						$lastAddedId = $data['id'];
+					}
+				}
             } else {
                 $new_data = [
-                    "value" => $widen_doc,
+                    "value" => $bynder_doc,
                     "product_id" => $product_id
                 ];
-                $where = ["id = ?" => $coockie_id];
-                $connection->update($table_name, $new_data, $where);
+				$bynderTempDocData = $this->bynderTempDocData->create();
+				$bynderTempDocData->load($coockie_id);
+                $bynderTempDocData->setData($new_data);
+				$bynderTempDocData->save();
                 $lastAddedId = $coockie_id;
             }
         }

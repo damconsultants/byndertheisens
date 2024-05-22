@@ -36,7 +36,11 @@ class AddData extends \Magento\Framework\App\Action\Action
         \Magento\Store\Model\StoreManagerInterface $storeManagerInterface,
         \Magento\Framework\Registry $registry,
         \Magento\Framework\App\ResourceConnection $resource,
-        \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory $cookieMetadataFactory
+        \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory $cookieMetadataFactory,
+		\DamConsultants\BynderTheisens\Model\BynderTempDataFactory $bynderTempData,
+        \DamConsultants\BynderTheisens\Model\ResourceModel\Collection\BynderTempDataCollectionFactory $bynderTempDataCollectionFactory,
+		\DamConsultants\BynderTheisens\Model\BynderTempDocDataFactory $bynderTempDocData,
+        \DamConsultants\BynderTheisens\Model\ResourceModel\Collection\BynderTempDocDataCollectionFactory $bynderTempDocDataCollectionFactory
     ) {
         $this->_pageFactory = $pageFactory;
         $this->_product = $product;
@@ -49,6 +53,10 @@ class AddData extends \Magento\Framework\App\Action\Action
         $this->_registry = $registry;
         $this->_resource = $resource;
         $this->cookieMetadataFactory = $cookieMetadataFactory;
+		$this->bynderTempData = $bynderTempData;
+        $this->bynderTempDataCollectionFactory = $bynderTempDataCollectionFactory;
+		$this->bynderTempDocData = $bynderTempDocData;
+        $this->bynderTempDocDataCollectionFactory = $bynderTempDocDataCollectionFactory;
         return parent::__construct($context);
     }
     /**
@@ -58,8 +66,6 @@ class AddData extends \Magento\Framework\App\Action\Action
      */
     public function execute()
     {
-        $connection = $this->_resource->getConnection();
-        $table_name = $connection->getTableName('bynder_temp_data');
         $product_id = $this->getRequest()->getParam('product_id');
         $coockie_id = $this->getRequest()->getParam('image_coockie_id');
         $bynder_image = $this->getRequest()->getParam('image');
@@ -68,30 +74,42 @@ class AddData extends \Magento\Framework\App\Action\Action
                 "value" => $bynder_image,
                 "product_id" => $product_id
             ];
-            $connection->insert($table_name, $data);
-            $lastAddedId = $connection->lastInsertId($table_name);
+			$bynderTempData = $this->bynderTempData->create();
+			$bynderTempData->setData($data);
+			$bynderTempData->save();
+			$collectionData = $this->bynderTempDataCollectionFactory->create()->load();
+			if(!empty($collectionData)){
+				$lastAddedId = "";
+				foreach($collectionData as $data) {
+					$lastAddedId = $data['id'];
+				}
+			}
         } else {
-            $select = $connection->select()
-            ->from(
-                ['c' => $table_name],
-                ['*']
-            )
-            ->where("c.product_id = ?", $product_id);
-            $records = $connection->fetchAll($select);
+			$records = $this->bynderTempDataCollectionFactory->create()->addFieldToFilter('product_id', ['eq' => [$product_id]])->load();
             if (empty($records)) {
                 $data = [
                     "value" => $bynder_image,
                     "product_id" => $product_id
                 ];
-                $connection->insert($table_name, $data);
-                $lastAddedId = $connection->lastInsertId($table_name);
+				$bynderTempData = $this->bynderTempData->create();
+				$bynderTempData->setData($data);
+				$bynderTempData->save();
+				$collectionData = $this->bynderTempDataCollectionFactory->create()->load();
+				if(!empty($collectionData)){
+					$lastAddedId = "";
+					foreach($collectionData as $data) {
+						$lastAddedId = $data['id'];
+					}
+				}
             } else {
-                $new_data = [
+				$new_data = [
                     "value" => $bynder_image,
                     "product_id" => $product_id
                 ];
-                $where = ["id = ?" => $coockie_id];
-                $connection->update($table_name, $new_data, $where);
+				$bynderTempData = $this->bynderTempData->create();
+				$bynderTempData->load($coockie_id);
+                $bynderTempData->setData($new_data);
+				$bynderTempData->save();
                 $lastAddedId = $coockie_id;
             }
         }

@@ -165,6 +165,10 @@
                     <label>Enable Cron</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
+				<field id="delete_cron_last_time" translate="label" type="text" sortOrder="2" showInDefault="2" showInWebsite="1" showInStore="1">
+                    <label>Last Cron Time</label>
+					<frontend_model>DamConsultants\BynderTheisens\Block\System\Config\Form\Field\Disable</frontend_model>
+                </field>
 				<field id="delete_frequency" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Frequency</label>
                     <source_model>DamConsultants\BynderTheisens\Model\Config\Source\Frequency</source_model>

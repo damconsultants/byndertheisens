@@ -90,15 +90,20 @@ class DeleteValue
 			if (!$enable) {
 				return false;
 			}
-			$path = 'delete_cron_last_time';
+			$path = 'cronimageconfig/delete_cron_bynder/delete_cron_last_time';
 			$isCofigPathExits = $this->datahelper->getStoreConfig($path);
 			if (!$isCofigPathExits) {
 				$current_time = time();
+				$formattedDate = date('Y-m-d H:i:s', $current_time);
 				$scope = 'default';
-				$add_time = $this->configWriter->save($path, $current_time, $scope, $scopeId = 0);
+				$add_time = $this->configWriter->save($path, $formattedDate, $scope, $scopeId = 0);
 			} else {
-				$current_time = $this->datahelper->getDeleteCron($path);
+				$dateString = $this->datahelper->getDeleteCron($path);
+				//$timezone = new \DateTimeZone(); // Specify the desired timezone
+				$date = new \DateTime($dateString);
+				$current_time = $date->getTimestamp();
 			}
+			
 			$bynder_auth["last_cron_time"] = $current_time;
 			$get_api_delete_details = $this->datahelper->getCheckBynderSideDeleteData($bynder_auth);
 			$response = json_decode($get_api_delete_details, true);
@@ -117,8 +122,9 @@ class DeleteValue
 				}
 			}
 			$new_current_time = time();
+			$newformattedDate = date('Y-m-d H:i:s', $new_current_time);
 			$scope = 'default';
-			$update_time = $this->configWriter->save($path, $new_current_time, $scope, $scopeId = 0);
+			$update_time = $this->configWriter->save($path, $newformattedDate, $scope, $scopeId = 0);
 			$this->cacheManager->flush($this->cacheManager->getAvailableTypes());
 		} catch (\Exception $e) {
 			echo $e->getMessage();
