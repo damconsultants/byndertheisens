@@ -148,7 +148,7 @@ $get_base_url = $block->getBaseUrl();
     var drag_img = "<?= $block->escapeHtml($block->getDrag()); ?>";
     var delete_icon = "<?= $block->escapeHtml($block->getDelete()); ?>";
     var attr = <?= /* @noEscape */ $block->getJson($attr); ?>;
-    var all_mg_roles = <?= json_encode($all_magento_roles) ?>;
+    var all_mg_roles = <?= /* @noEscape */ $block->getJson($all_magento_roles) ?>;
     var img_details_old = []; 
     var past_bynder_image_videos=[];
     var past_item_array = [];

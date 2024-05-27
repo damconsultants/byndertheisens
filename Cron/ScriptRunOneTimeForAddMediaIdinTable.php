@@ -26,6 +26,8 @@ class ScriptRunOneTimeForAddMediaIdinTable
 	protected $configWriter;
 	protected $resouce;
 	protected $collectionFactory;
+	protected $ApiBynderMediaTable;
+	protected $ApiBynderMediaTableCollection;
 	/**
 	 * Featch Null Data To Magento
 	 * @param LoggerInterface $logger
@@ -126,7 +128,7 @@ class ScriptRunOneTimeForAddMediaIdinTable
 				);
 			}
 		} catch (\Exception $e) {
-			echo $e->getMessage();
+			$this->logger->info("ScriptRunOneTimeForAddMediaIdinTable Cron ". $e->getMessage());
 		}
 
 	}

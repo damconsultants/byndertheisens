@@ -127,7 +127,7 @@ class DeleteValue
 			$update_time = $this->configWriter->save($path, $newformattedDate, $scope, $scopeId = 0);
 			$this->cacheManager->flush($this->cacheManager->getAvailableTypes());
 		} catch (\Exception $e) {
-			echo $e->getMessage();
+			$this->logger->info("Delete Cron ". $e->getMessage());
 		}
 
 	}
