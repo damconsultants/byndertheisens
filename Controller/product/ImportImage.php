@@ -8,6 +8,42 @@ class ImportImage extends \Magento\Framework\App\Action\Action
      */
     protected $_pageFactory;
     /**
+     * @var string $_product;
+     */
+    protected $_product;
+    /**
+     * @var string $file;
+     */
+    protected $file;
+    /**
+     * @var string $resultJsonFactory;
+     */
+    protected $resultJsonFactory;
+    /**
+     * @var string $driverFile;
+     */
+    protected $driverFile;
+    /**
+     * @var string $storeManagerInterface;
+     */
+    protected $storeManagerInterface;
+    /**
+     * @var string $cookieManager;
+     */
+    protected $cookieManager;
+    /**
+     * @var string $productActionObject;
+     */
+    protected $productActionObject;
+    /**
+     * @var string $_registry;
+     */
+    protected $_registry;
+    /**
+     * @var string $logger;
+     */
+    protected $logger;
+    /**
      * Import Image.
      *
      * @param \Magento\Backend\App\Action\Context $context

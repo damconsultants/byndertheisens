@@ -6,12 +6,15 @@ use Magento\Backend\App\Action\Context;
 
 class DeleteCronSync extends Action
 {
-    public $BynderConfigSyncDataFactory;
+    /**
+     * @var $bynderdelete
+     */
+    public $bynderdelete;
     /**
      * Closed constructor.
      *
      * @param Context $context
-     * @param DamConsultants\BynderTheisens\Model\BynderDeleteDataFactory $BynderDeleteDataFactory
+     * @param DamConsultants\BynderTheisens\Model\BynderDeleteDataFactory $BynderSycDataFactory
      */
     public function __construct(
         Context $context,
@@ -37,7 +40,9 @@ class DeleteCronSync extends Action
         }
         return $resultRedirect->setPath('bynder/index/deletecrongrid');
     }
-
+    /**
+     * Execute
+     */
     public function _isAllowed()
     {
         return $this->_authorization->isAllowed('DamConsultants_BynderTheisens::delete');

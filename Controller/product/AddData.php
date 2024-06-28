@@ -1,13 +1,71 @@
 <?php
 namespace DamConsultants\BynderTheisens\Controller\Product;
 
+use DamConsultants\BynderTheisens\Model\ResourceModel\Collection\BynderTempDataCollectionFactory;
+use DamConsultants\BynderTheisens\Model\ResourceModel\Collection\BynderTempDocDataCollectionFactory;
+
 class AddData extends \Magento\Framework\App\Action\Action
 {
     /**
      * @var string $_pageFactory;
      */
     protected $_pageFactory;
-
+    /**
+     * @var $_product
+     */
+    protected $_product;
+    /**
+     * @var $file
+     */
+    protected $file;
+    /**
+     * @var $resultJsonFactory
+     */
+    protected $resultJsonFactory;
+    /**
+     * @var $driverFile
+     */
+    protected $driverFile;
+    /**
+     * @var $storeManagerInterface
+     */
+    protected $storeManagerInterface;
+    /**
+     * @var $cookieManager
+     */
+    protected $cookieManager;
+    /**
+     * @var $productActionObject
+     */
+    protected $productActionObject;
+    /**
+     * @var $_registry
+     */
+    protected $_registry;
+    /**
+     * @var $_resource
+     */
+    protected $_resource;
+    /**
+     * @var $cookieMetadataFactory
+     */
+    protected $cookieMetadataFactory;
+    /**
+     * @var $bynderTempData
+     */
+    protected $bynderTempData;
+    /**
+     * @var $bynderTempDataCollectionFactory
+     */
+    protected $bynderTempDataCollectionFactory;
+    /**
+     * @var $bynderTempDocData
+     */
+    protected $bynderTempDocData;
+    /**
+     * @var $bynderTempDocDataCollectionFactory
+     */
+    protected $bynderTempDocDataCollectionFactory;
     /**
      * Add Data.
      *
@@ -23,6 +81,10 @@ class AddData extends \Magento\Framework\App\Action\Action
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Framework\App\ResourceConnection $resource
      * @param \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory $cookieMetadataFactory
+     * @param \DamConsultants\BynderTheisens\Model\BynderTempDataFactory $bynderTempData
+     * @param BynderTempDataCollectionFactory $bynderTempDataCollectionFactory
+     * @param \DamConsultants\BynderTheisens\Model\BynderTempDocDataFactory $bynderTempDocData
+     * @param BynderTempDocDataCollectionFactory $bynderTempDocDataCollectionFactory
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
@@ -37,10 +99,10 @@ class AddData extends \Magento\Framework\App\Action\Action
         \Magento\Framework\Registry $registry,
         \Magento\Framework\App\ResourceConnection $resource,
         \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory $cookieMetadataFactory,
-		\DamConsultants\BynderTheisens\Model\BynderTempDataFactory $bynderTempData,
-        \DamConsultants\BynderTheisens\Model\ResourceModel\Collection\BynderTempDataCollectionFactory $bynderTempDataCollectionFactory,
-		\DamConsultants\BynderTheisens\Model\BynderTempDocDataFactory $bynderTempDocData,
-        \DamConsultants\BynderTheisens\Model\ResourceModel\Collection\BynderTempDocDataCollectionFactory $bynderTempDocDataCollectionFactory
+        \DamConsultants\BynderTheisens\Model\BynderTempDataFactory $bynderTempData,
+        BynderTempDataCollectionFactory $bynderTempDataCollectionFactory,
+        \DamConsultants\BynderTheisens\Model\BynderTempDocDataFactory $bynderTempDocData,
+        BynderTempDocDataCollectionFactory $bynderTempDocDataCollectionFactory
     ) {
         $this->_pageFactory = $pageFactory;
         $this->_product = $product;
@@ -53,9 +115,9 @@ class AddData extends \Magento\Framework\App\Action\Action
         $this->_registry = $registry;
         $this->_resource = $resource;
         $this->cookieMetadataFactory = $cookieMetadataFactory;
-		$this->bynderTempData = $bynderTempData;
+        $this->bynderTempData = $bynderTempData;
         $this->bynderTempDataCollectionFactory = $bynderTempDataCollectionFactory;
-		$this->bynderTempDocData = $bynderTempDocData;
+        $this->bynderTempDocData = $bynderTempDocData;
         $this->bynderTempDocDataCollectionFactory = $bynderTempDocDataCollectionFactory;
         return parent::__construct($context);
     }
@@ -74,42 +136,43 @@ class AddData extends \Magento\Framework\App\Action\Action
                 "value" => $bynder_image,
                 "product_id" => $product_id
             ];
-			$bynderTempData = $this->bynderTempData->create();
-			$bynderTempData->setData($data);
-			$bynderTempData->save();
-			$collectionData = $this->bynderTempDataCollectionFactory->create()->load();
-			if(!empty($collectionData)){
-				$lastAddedId = "";
-				foreach($collectionData as $data) {
-					$lastAddedId = $data['id'];
-				}
-			}
+            $bynderTempData = $this->bynderTempData->create();
+            $bynderTempData->setData($data);
+            $bynderTempData->save();
+            $collectionData = $this->bynderTempDataCollectionFactory->create()->load();
+            if (!empty($collectionData)) {
+                $lastAddedId = "";
+                foreach ($collectionData as $data) {
+                    $lastAddedId = $data['id'];
+                }
+            }
         } else {
-			$records = $this->bynderTempDataCollectionFactory->create()->addFieldToFilter('product_id', ['eq' => [$product_id]])->load();
+            $records = $this->bynderTempDataCollectionFactory->create();
+            $records->addFieldToFilter('product_id', ['eq' => [$product_id]])->load();
             if (empty($records)) {
                 $data = [
                     "value" => $bynder_image,
                     "product_id" => $product_id
                 ];
-				$bynderTempData = $this->bynderTempData->create();
-				$bynderTempData->setData($data);
-				$bynderTempData->save();
-				$collectionData = $this->bynderTempDataCollectionFactory->create()->load();
-				if(!empty($collectionData)){
-					$lastAddedId = "";
-					foreach($collectionData as $data) {
-						$lastAddedId = $data['id'];
-					}
-				}
+                $bynderTempData = $this->bynderTempData->create();
+                $bynderTempData->setData($data);
+                $bynderTempData->save();
+                $collectionData = $this->bynderTempDataCollectionFactory->create()->load();
+                if (!empty($collectionData)) {
+                    $lastAddedId = "";
+                    foreach ($collectionData as $data) {
+                        $lastAddedId = $data['id'];
+                    }
+                }
             } else {
-				$new_data = [
+                $new_data = [
                     "value" => $bynder_image,
                     "product_id" => $product_id
                 ];
-				$bynderTempData = $this->bynderTempData->create();
-				$bynderTempData->load($coockie_id);
+                $bynderTempData = $this->bynderTempData->create();
+                $bynderTempData->load($coockie_id);
                 $bynderTempData->setData($new_data);
-				$bynderTempData->save();
+                $bynderTempData->save();
                 $lastAddedId = $coockie_id;
             }
         }

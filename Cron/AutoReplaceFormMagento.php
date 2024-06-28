@@ -14,6 +14,54 @@ use DamConsultants\BynderTheisens\Model\ResourceModel\Collection\BynderSycDataCo
 class AutoReplaceFormMagento
 {
     /**
+     * @var $bynderMediaTable
+     */
+    protected $_productRepository;
+    /**
+     * @var $bynderMediaTable
+     */
+    protected $attribute;
+    /**
+     * @var $bynderMediaTable
+     */
+    protected $action;
+    /**
+     * @var $bynderMediaTable
+     */
+    protected $datahelper;
+    /**
+     * @var $bynderMediaTable
+     */
+    protected $collectionFactory;
+    /**
+     * @var $bynderMediaTable
+     */
+    protected $_byndersycData;
+    /**
+     * @var $bynderMediaTable
+     */
+    protected $_byndersycDataCollection;
+    /**
+     * @var $bynderMediaTable
+     */
+    protected $_resource;
+    /**
+     * @var $bynderMediaTable
+     */
+    protected $metaPropertyCollectionFactory;
+    /**
+     * @var $bynderMediaTable
+     */
+    protected $storeManagerInterface;
+    /**
+     * @var $bynderMediaTable
+     */
+    protected $bynder;
+    /**
+     * @var $bynderMediaTable
+     */
+    protected $_logger;
+    /**
      * Auto Replace From Magento
      * @param ProductRepository $productRepository
      * @param Attribute $attribute
@@ -67,8 +115,6 @@ class AutoReplaceFormMagento
         $logger = new \Zend_Log();
         $logger->addWriter($writer);
         $logger->info("DamConsultants Bynder Add  Cron");
-
-
         /*
         $productCollection = $this->attribute->getCollection();
         $productColl = $this->collectionFactory->create()

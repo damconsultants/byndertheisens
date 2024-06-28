@@ -4,18 +4,80 @@ namespace DamConsultants\BynderTheisens\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
 use DamConsultants\BynderTheisens\Model\ResourceModel\Collection\MetaPropertyCollectionFactory;
+use DamConsultants\BynderTheisens\Model\ResourceModel\Collection\BynderMediaTableCollectionFactory;
+use DamConsultants\BynderTheisens\Model\ResourceModel\Collection\BynderTempDataCollectionFactory;
+use DamConsultants\BynderTheisens\Model\ResourceModel\Collection\BynderTempDocDataCollectionFactory;
 
 class ProductDataSaveAfter implements ObserverInterface
 {
     /**
-     * @var \Magento\Framework\App\ResourceConnection
+     * @var $cookieManager
      */
-    protected $_resource;
-
+    protected $cookieManager;
     /**
-     * @var \Magento\Catalog\Model\Product\Action
+     * @var $cookieManager
+     */
+    protected $cookieMetadataFactory;
+    /**
+     * @var $cookieManager
      */
     protected $productActionObject;
+    /**
+     * @var $cookieManager
+     */
+    protected $_byndersycData;
+    /**
+     * @var $cookieManager
+     */
+    protected $datahelper;
+    /**
+     * @var $cookieManager
+     */
+    protected $bynderMediaTable;
+    /**
+     * @var $cookieManager
+     */
+    protected $bynderMediaTableCollectionFactory;
+    /**
+     * @var $cookieManager
+     */
+    protected $metaPropertyCollectionFactory;
+    /**
+     * @var $cookieManager
+     */
+    protected $_collection;
+    /**
+     * @var $cookieManager
+     */
+    protected $bynderTempData;
+    /**
+     * @var $cookieManager
+     */
+    protected $bynderTempDataCollectionFactory;
+    /**
+     * @var $cookieManager
+     */
+    protected $bynderTempDocData;
+    /**
+     * @var $cookieManager
+     */
+    protected $bynderTempDocDataCollectionFactory;
+    /**
+     * @var $cookieManager
+     */
+    protected $_resource;
+    /**
+     * @var $cookieManager
+     */
+    protected $storeManagerInterface;
+    /**
+     * @var $cookieManager
+     */
+    protected $messageManager;
+    /**
+     * @var $cookieManager
+     */
+    protected $resultRedirectFactory;
 
     /**
      * Product save after
@@ -24,6 +86,12 @@ class ProductDataSaveAfter implements ObserverInterface
      * @param \Magento\Catalog\Model\Product\Action $productActionObject
      * @param \DamConsultants\BynderTheisens\Model\BynderSycDataFactory $byndersycData
      * @param \DamConsultants\BynderTheisens\Model\ResourceModel\Collection\BynderSycDataCollectionFactory $collection
+     * @param \DamConsultants\BynderTheisens\Model\BynderMediaTableFactory $bynderMediaTable
+     * @param BynderMediaTableCollectionFactory $bynderMediaTableCollectionFactory
+     * @param \DamConsultants\BynderTheisens\Model\BynderTempDataFactory $bynderTempData
+     * @param BynderTempDataCollectionFactory $bynderTempDataCollectionFactory
+     * @param \DamConsultants\BynderTheisens\Model\BynderTempDocDataFactory $bynderTempDocData
+     * @param BynderTempDocDataCollectionFactory $bynderTempDocDataCollectionFactory
      * @param \Magento\Framework\App\ResourceConnection $resource
      * @param \DamConsultants\BynderTheisens\Helper\Data $DataHelper
      * @param MetaPropertyCollectionFactory $metaPropertyCollectionFactory
@@ -38,12 +106,12 @@ class ProductDataSaveAfter implements ObserverInterface
         \Magento\Catalog\Model\Product\Action $productActionObject,
         \DamConsultants\BynderTheisens\Model\BynderSycDataFactory $byndersycData,
         \DamConsultants\BynderTheisens\Model\ResourceModel\Collection\BynderSycDataCollectionFactory $collection,
-		\DamConsultants\BynderTheisens\Model\BynderMediaTableFactory $bynderMediaTable,
-        \DamConsultants\BynderTheisens\Model\ResourceModel\Collection\BynderMediaTableCollectionFactory $bynderMediaTableCollectionFactory,
-		\DamConsultants\BynderTheisens\Model\BynderTempDataFactory $bynderTempData,
-        \DamConsultants\BynderTheisens\Model\ResourceModel\Collection\BynderTempDataCollectionFactory $bynderTempDataCollectionFactory,
-		\DamConsultants\BynderTheisens\Model\BynderTempDocDataFactory $bynderTempDocData,
-        \DamConsultants\BynderTheisens\Model\ResourceModel\Collection\BynderTempDocDataCollectionFactory $bynderTempDocDataCollectionFactory,
+        \DamConsultants\BynderTheisens\Model\BynderMediaTableFactory $bynderMediaTable,
+        BynderMediaTableCollectionFactory $bynderMediaTableCollectionFactory,
+        \DamConsultants\BynderTheisens\Model\BynderTempDataFactory $bynderTempData,
+        BynderTempDataCollectionFactory $bynderTempDataCollectionFactory,
+        \DamConsultants\BynderTheisens\Model\BynderTempDocDataFactory $bynderTempDocData,
+        BynderTempDocDataCollectionFactory $bynderTempDocDataCollectionFactory,
         \Magento\Framework\App\ResourceConnection $resource,
         \DamConsultants\BynderTheisens\Helper\Data $DataHelper,
         MetaPropertyCollectionFactory $metaPropertyCollectionFactory,
@@ -56,13 +124,13 @@ class ProductDataSaveAfter implements ObserverInterface
         $this->productActionObject = $productActionObject;
         $this->_byndersycData = $byndersycData;
         $this->datahelper = $DataHelper;
-		$this->bynderMediaTable = $bynderMediaTable;
+        $this->bynderMediaTable = $bynderMediaTable;
         $this->bynderMediaTableCollectionFactory = $bynderMediaTableCollectionFactory;
         $this->metaPropertyCollectionFactory = $metaPropertyCollectionFactory;
         $this->_collection = $collection;
-		$this->bynderTempData = $bynderTempData;
+        $this->bynderTempData = $bynderTempData;
         $this->bynderTempDataCollectionFactory = $bynderTempDataCollectionFactory;
-		$this->bynderTempDocData = $bynderTempDocData;
+        $this->bynderTempDocData = $bynderTempDocData;
         $this->bynderTempDocDataCollectionFactory = $bynderTempDocDataCollectionFactory;
         $this->_resource = $resource;
         $this->storeManagerInterface = $storeManagerInterface;
@@ -96,16 +164,17 @@ class ProductDataSaveAfter implements ObserverInterface
         $model = $this->_byndersycData->create();
         $collection = $this->_collection->create()->addFieldToFilter('sku', $product_sku_key);
         $delete_collection = $this->_collection->create()->addFieldToFilter('remove_for_magento', '0');
-		$all_meta_properties = $metaProperty_collection = $this->metaPropertyCollectionFactory->create()->getData();
+        $all_meta_properties = $metaProperty_collection = $this->metaPropertyCollectionFactory->create()->getData();
         $collection_data_value = [];
         $collection_data_slug_val = [];
-		$image_coockie_id = $this->cookieManager->getCookie('image_coockie_id');
+        $image_coockie_id = $this->cookieManager->getCookie('image_coockie_id');
         $doc_coockie_id = $this->cookieManager->getCookie('doc_coockie_id');
-		if ($image_coockie_id != 0) {
-			$bynderTempdata = $this->bynderTempDataCollectionFactory->create()->addFieldToFilter('id',$image_coockie_id)->load();
+        if ($image_coockie_id != 0) {
+            $bynderTempdata = $this->bynderTempDataCollectionFactory->create()
+            ->addFieldToFilter('id', $image_coockie_id)->load();
             if (isset($bynderTempdata)) {
                 foreach ($bynderTempdata as $record) {
-                    $image = $record['value']; 
+                    $image = $record['value'];
                 }
             }
         } else {
@@ -117,8 +186,9 @@ class ProductDataSaveAfter implements ObserverInterface
             "old" => $bynder_multi_img,
             "new" => $image
         ];
-		if ($doc_coockie_id != 0) {
-			$bynderTempdocdata = $this->bynderTempDocDataCollectionFactory->create()->addFieldToFilter('id',$doc_coockie_id)->load();
+        if ($doc_coockie_id != 0) {
+            $bynderTempdocdata = $this->bynderTempDocDataCollectionFactory->create()
+            ->addFieldToFilter('id', $doc_coockie_id)->load();
             if (isset($bynderTempdocdata)) {
                 foreach ($bynderTempdocdata as $recorddoc) {
                     $document = $recorddoc['value'];
@@ -309,7 +379,7 @@ class ProductDataSaveAfter implements ObserverInterface
                     }
                 }
                 $this->productActionObject->updateAttributes([$productId], ['bynder_document' => $document], $storeId);
-				$this->bynderTempDocData->create()->load($doc_coockie_id)->delete();
+                $this->bynderTempDocData->create()->load($doc_coockie_id)->delete();
                 $publicCookieMetadata = $this->cookieMetadataFactory->createPublicCookieMetadata();
                 $publicCookieMetadata->setDurationOneYear();
                 $publicCookieMetadata->setPath('/');
@@ -438,7 +508,7 @@ class ProductDataSaveAfter implements ObserverInterface
                     }
 
                     /* sync alt text and image role to Bynder */
-					$m_id = [];
+                    $m_id = [];
                     if (!empty($image)) {
                         $new_changed_bynder_img_attribute = json_decode($image, true);
                         if (!empty($all_meta_properties)) {
@@ -448,17 +518,29 @@ class ProductDataSaveAfter implements ObserverInterface
                                 $image
                             );
                         }
-						foreach ($new_changed_bynder_img_attribute as $img) {
-							$m_id[] = $img['bynder_md_id'];
-							$this->getDeleteMedaiDataTable($product_sku_key, $img['bynder_md_id']);
-						}
-						$this->getInsertMedaiDataTable($product_sku_key, $m_id);
-                        $this->productActionObject->updateAttributes([$productId], ['bynder_isMain' => $flag], $storeId);
-                        $this->productActionObject->updateAttributes([$productId], ['bynder_multi_img' => $image], $storeId);
-                        if ($product->getBynderVideos()) {
-                            $this->productActionObject->updateAttributes([$productId], ['bynder_videos' => $video], $storeId);
+                        foreach ($new_changed_bynder_img_attribute as $img) {
+                            $m_id[] = $img['bynder_md_id'];
+                            $this->getDeleteMedaiDataTable($product_sku_key, $img['bynder_md_id']);
                         }
-						$this->bynderTempData->create()->load($image_coockie_id)->delete();
+                        $this->getInsertMedaiDataTable($product_sku_key, $m_id);
+                        $this->productActionObject->updateAttributes(
+                            [$productId],
+                            ['bynder_isMain' => $flag],
+                            $storeId
+                        );
+                        $this->productActionObject->updateAttributes(
+                            [$productId],
+                            ['bynder_multi_img' => $image],
+                            $storeId
+                        );
+                        if ($product->getBynderVideos()) {
+                            $this->productActionObject->updateAttributes(
+                                [$productId],
+                                ['bynder_videos' => $video],
+                                $storeId
+                            );
+                        }
+                        $this->bynderTempData->create()->load($image_coockie_id)->delete();
                         $publicCookieMetadata = $this->cookieMetadataFactory->createPublicCookieMetadata();
                         $publicCookieMetadata->setDurationOneYear();
                         $publicCookieMetadata->setPath('/');
@@ -471,10 +553,14 @@ class ProductDataSaveAfter implements ObserverInterface
                     }
                 } else {
                     $this->productActionObject->updateAttributes([$productId], ['bynder_isMain' => ""], $storeId);
-                    $this->productActionObject->updateAttributes([$productId], ['bynder_multi_img' => $image], $storeId);
+                    $this->productActionObject->updateAttributes(
+                        [$productId],
+                        ['bynder_multi_img' => $image],
+                        $storeId
+                    );
                     $this->productActionObject->updateAttributes([$productId], ['bynder_cron_sync' => ""], $storeId);
                     $this->productActionObject->updateAttributes([$productId], ['bynder_auto_replace' => ""], $storeId);
-					$this->bynderTempData->create()->load($image_coockie_id)->delete();
+                    $this->bynderTempData->create()->load($image_coockie_id)->delete();
                     $publicCookieMetadata = $this->cookieMetadataFactory->createPublicCookieMetadata();
                     $publicCookieMetadata->setDurationOneYear();
                     $publicCookieMetadata->setPath('/');
@@ -490,7 +576,7 @@ class ProductDataSaveAfter implements ObserverInterface
                 $this->productActionObject->updateAttributes([$productId], ['bynder_multi_img' => $image], $storeId);
                 $this->productActionObject->updateAttributes([$productId], ['bynder_cron_sync' => ""], $storeId);
                 $this->productActionObject->updateAttributes([$productId], ['bynder_auto_replace' => ""], $storeId);
-				$this->bynderTempData->create()->load($image_coockie_id)->delete();
+                $this->bynderTempData->create()->load($image_coockie_id)->delete();
                 $publicCookieMetadata = $this->cookieMetadataFactory->createPublicCookieMetadata();
                 $publicCookieMetadata->setDurationOneYear();
                 $publicCookieMetadata->setPath('/');
@@ -503,24 +589,26 @@ class ProductDataSaveAfter implements ObserverInterface
             }
         }
     }
-	 /**
+    /**
      * Is Json
      *
-     * @param array $insert_data
+     * @param string $sku
+     * @param string $m_id
      * @return $this
      */
     public function getInsertMedaiDataTable($sku, $m_id)
     {
         $model = $this->bynderMediaTable->create();
-        $modelcollection = $this->bynderMediaTableCollectionFactory->create()->addFieldToFilter('sku', ['eq' => [$sku]])->load();
+        $modelcollection = $this->bynderMediaTableCollectionFactory->create()
+        ->addFieldToFilter('sku', ['eq' => [$sku]])->load();
         $table_m_id = [];
-        if(!empty($modelcollection)) {
-            foreach($modelcollection as $mdata) {
+        if (!empty($modelcollection)) {
+            foreach ($modelcollection as $mdata) {
                 $table_m_id[] = $mdata['media_id'];
             }
         }
         $media_diff = array_diff($m_id, $table_m_id);
-        foreach ($media_diff as $new_data){
+        foreach ($media_diff as $new_data) {
             $data_image_data = [
                 'sku' => $sku,
                 'media_id' => trim($new_data),
@@ -529,19 +617,20 @@ class ProductDataSaveAfter implements ObserverInterface
             $model->setData($data_image_data);
             $model->save();
         }
-       
     }
-     /**
+    /**
      * Is Json
      *
-     * @param array $insert_data
+     * @param string $sku
+     * @param string $media_id
      * @return $this
      */
     public function getDeleteMedaiDataTable($sku, $media_id)
     {
-        $model = $this->bynderMediaTableCollectionFactory->create()->addFieldToFilter('sku', ['eq' => [$sku]])->load();
-        foreach($model as $mdata){
-            if($mdata['media_id'] != $media_id){
+        $model = $this->bynderMediaTableCollectionFactory->create()
+        ->addFieldToFilter('sku', ['eq' => [$sku]])->load();
+        foreach ($model as $mdata) {
+            if ($mdata['media_id'] != $media_id) {
                 $this->bynderMediaTable->create()->load($mdata['id'])->delete();
 
             }

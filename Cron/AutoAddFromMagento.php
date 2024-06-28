@@ -9,13 +9,50 @@ use Magento\Catalog\Model\ProductRepository;
 use Magento\Catalog\Model\Product\Action;
 use DamConsultants\BynderTheisens\Model\BynderFactory;
 use DamConsultants\BynderTheisens\Model\ResourceModel\Collection\MetaPropertyCollectionFactory;
+use DamConsultants\BynderTheisens\Model\ResourceModel\Collection\BynderMediaTableCollectionFactory;
 
 class AutoAddFromMagento
 {
     /**
-     * @var \Psr\Log\LoggerInterface
+     * @var $logger
      */
     protected $logger;
+    /**
+     * @var $_productRepository
+     */
+    protected $_productRepository;
+    /**
+     * @var $collectionFactory
+     */
+    protected $collectionFactory;
+    /**
+     * @var $datahelper
+     */
+    protected $datahelper;
+    /**
+     * @var $action
+     */
+    protected $action;
+    /**
+     * @var $metaPropertyCollectionFactory
+     */
+    protected $metaPropertyCollectionFactory;
+    /**
+     * @var $bynderMediaTable
+     */
+    protected $bynderMediaTable;
+    /**
+     * @var $bynderMediaTableCollectionFactory
+     */
+    protected $bynderMediaTableCollectionFactory;
+    /**
+     * @var $storeManagerInterface
+     */
+    protected $storeManagerInterface;
+    /**
+     * @var $bynder
+     */
+    protected $bynder;
 
     /**
      * Featch Null Data To Magento
@@ -24,6 +61,8 @@ class AutoAddFromMagento
      * @param \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $collectionFactory
      * @param StoreManagerInterface $storeManagerInterface
      * @param \DamConsultants\BynderTheisens\Helper\Data $DataHelper
+     * @param \DamConsultants\BynderTheisens\Model\BynderMediaTableFactory $bynderMediaTable
+     * @param BynderMediaTableCollectionFactory $bynderMediaTableCollectionFactory
      * @param Action $action
      * @param MetaPropertyCollectionFactory $metaPropertyCollectionFactory
      * @param BynderFactory $bynder
@@ -34,8 +73,8 @@ class AutoAddFromMagento
         \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $collectionFactory,
         StoreManagerInterface $storeManagerInterface,
         \DamConsultants\BynderTheisens\Helper\Data $DataHelper,
-		\DamConsultants\BynderTheisens\Model\BynderMediaTableFactory $bynderMediaTable,
-        \DamConsultants\BynderTheisens\Model\ResourceModel\Collection\BynderMediaTableCollectionFactory $bynderMediaTableCollectionFactory,
+        \DamConsultants\BynderTheisens\Model\BynderMediaTableFactory $bynderMediaTable,
+        BynderMediaTableCollectionFactory $bynderMediaTableCollectionFactory,
         Action $action,
         MetaPropertyCollectionFactory $metaPropertyCollectionFactory,
         BynderFactory $bynder
@@ -47,7 +86,7 @@ class AutoAddFromMagento
         $this->datahelper = $DataHelper;
         $this->action = $action;
         $this->metaPropertyCollectionFactory = $metaPropertyCollectionFactory;
-		$this->bynderMediaTable = $bynderMediaTable;
+        $this->bynderMediaTable = $bynderMediaTable;
         $this->bynderMediaTableCollectionFactory = $bynderMediaTableCollectionFactory;
         $this->storeManagerInterface = $storeManagerInterface;
         $this->bynder = $bynder;
@@ -63,12 +102,11 @@ class AutoAddFromMagento
         $logger = new \Zend_Log();
         $logger->addWriter($writer);
         $logger->info("Auto Add Image Value");
-		$enable = $this->datahelper->getAutoCronEnable();
-		if (!$enable) {
-			return false;
-		}
+        $enable = $this->datahelper->getAutoCronEnable();
+        if (!$enable) {
+            return false;
+        }
         $product_collection = $this->collectionFactory->create();
-		
         $product_sku_limit = (int)$this->datahelper->getProductSkuLimitConfig();
         if (!empty($product_sku_limit)) {
             $product_collection->getSelect()->limit($product_sku_limit);
@@ -121,7 +159,6 @@ class AutoAddFromMagento
                                         'media_id' => "",
                                         "data_type" => ""
                                     ];
-                                    //$this->getInsertDataTable($insert_data);
                                 }
                                 
                             } else {
@@ -131,7 +168,6 @@ class AutoAddFromMagento
                                     'media_id' => "",
                                     "data_type" => ""
                                 ];
-                                //$this->getInsertDataTable($insert_data);
                             }
                         } else {
                             $insert_data = [
@@ -140,7 +176,6 @@ class AutoAddFromMagento
                                 'media_id' => "",
                                 "data_type" => ""
                             ];
-                            //$this->getInsertDataTable($insert_data);
                         }
                     } else {
                         $insert_data = [
@@ -149,7 +184,6 @@ class AutoAddFromMagento
                             'media_id' => "",
                             "data_type" => ""
                         ];
-                        //$this->getInsertDataTable($insert_data);
                     }
                 }
             }
@@ -160,7 +194,7 @@ class AutoAddFromMagento
             ->addAttributeToFilter('status', \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED)
             ->addAttributeToFilter(
                 [
-                    ['attribute' => 'bynder_auto_replace', 'notnull' => true]                    
+                    ['attribute' => 'bynder_auto_replace', 'notnull' => true]
                 ]
             )
             ->load();
@@ -249,28 +283,31 @@ class AutoAddFromMagento
             'media_id' => $insert_data['media_id'],
             'bynder_data_type' => $insert_data['data_type']
         ];
-        
         $model->setData($data_image_data);
         $model->save();
     }*/
-	/**
+    /**
      * Is Json
      *
-     * @param array $insert_data
+     * @param mixed $sku
+     * @param mixed $m_id
+     * @param mixed $storeId
+     * @param string $product_ids
      * @return $this
      */
     public function getInsertMedaiDataTable($sku, $m_id, $storeId, $product_ids)
     {
         $model = $this->bynderMediaTable->create();
-        $modelcollection = $this->bynderMediaTableCollectionFactory->create()->addFieldToFilter('sku', ['eq' => [$sku]])->load();
+        $modelcollection = $this->bynderMediaTableCollectionFactory->create();
+        $modelcollection->addFieldToFilter('sku', ['eq' => [$sku]])->load();
         $table_m_id = [];
-        if(!empty($modelcollection)) {
-            foreach($modelcollection as $mdata) {
+        if (!empty($modelcollection)) {
+            foreach ($modelcollection as $mdata) {
                 $table_m_id[] = $mdata['media_id'];
             }
         }
         $media_diff = array_diff($m_id, $table_m_id);
-        foreach ($media_diff as $new_data){
+        foreach ($media_diff as $new_data) {
             $data_image_data = [
                 'sku' => $sku,
                 'media_id' => trim($new_data),
@@ -279,28 +316,27 @@ class AutoAddFromMagento
             $model->setData($data_image_data);
             $model->save();
         }
-		$updated_values = [
-			'bynder_delete_cron' => 1
-		];
-		
-		$this->action->updateAttributes(
-			[$product_ids],
-			$updated_values,
-			$storeId
-		);
-       
+        $updated_values = [
+            'bynder_delete_cron' => 1
+        ];
+        $this->action->updateAttributes(
+            [$product_ids],
+            $updated_values,
+            $storeId
+        );
     }
-     /**
+    /**
      * Is Json
      *
-     * @param array $insert_data
+     * @param mixed $sku
+     * @param string $media_id
      * @return $this
      */
     public function getDeleteMedaiDataTable($sku, $media_id)
     {
         $model = $this->bynderMediaTableCollectionFactory->create()->addFieldToFilter('sku', ['eq' => [$sku]])->load();
-        foreach($model as $mdata){
-            if($mdata['media_id'] != $media_id){
+        foreach ($model as $mdata) {
+            if ($mdata['media_id'] != $media_id) {
                 $this->bynderMediaTable->create()->load($mdata['id'])->delete();
 
             }
@@ -558,9 +594,9 @@ class AutoAddFromMagento
                                     'media_id' => $bynder_media_id[$vv],
                                     'data_type' => '1'
                                 ];
-                                //$this->getInsertDataTable($data_image_data);
-                                // $model->setData($data_image_data);
-                                // $model->save();
+                                /*$this->getInsertDataTable($data_image_data);
+                                $model->setData($data_image_data);
+                                $model->save();*/
                                 if (count($item_old_value) > 0) {
                                     foreach ($item_old_value as $kv => $img) {
                                         if ($img['item_type'] == "IMAGE") {
@@ -592,9 +628,9 @@ class AutoAddFromMagento
                             }
                         }
                     }
-					$d_img_roll = "";
+                    $d_img_roll = "";
                     $d_media_id = [];
-					if (count($diff_image_detail) > 0) {
+                    if (count($diff_image_detail) > 0) {
                         foreach ($diff_image_detail as $d_img) {
                             $d_img_roll = $d_img['image_role'];
                             $d_media_id[] =  $d_img['bynder_md_id'];
@@ -608,9 +644,9 @@ class AutoAddFromMagento
                         foreach ($item_old_value as $img) {
                             if ($img['item_type'] == 'IMAGE') {
                                 $item_img_url = $img['item_url'];
-                            } 
+                            }
                             if (in_array($item_img_url, $image)) {
-								 $item_key = array_search($img['item_url'],array_column($image_detail,"item_url"));
+                                $item_key = array_search($img['item_url'], array_column($image_detail, "item_url"));
                                 $new_image_detail[] = [
                                     "item_url" => $item_img_url,
                                     "alt_text" => $image_detail[$item_key]['alt_text'],
@@ -623,37 +659,34 @@ class AutoAddFromMagento
                             }
                         }
                     }
-					$array_merge = array_merge($new_image_detail, $diff_image_detail); 
-					//echo "<pre>"; print_r($array_merge);
-					$media_id = [];
-					foreach ($array_merge as $img) {
-						$type[] = $img['item_type'];
-						$media_id[] = $img['bynder_md_id'];
-						$this->getDeleteMedaiDataTable($product_sku_key, $img['bynder_md_id']);
+                    $array_merge = array_merge($new_image_detail, $diff_image_detail);
+                    $media_id = [];
+                    foreach ($array_merge as $img) {
+                        $type[] = $img['item_type'];
+                        $media_id[] = $img['bynder_md_id'];
+                        $this->getDeleteMedaiDataTable($product_sku_key, $img['bynder_md_id']);
                     }
-					$this->getInsertMedaiDataTable($product_sku_key, $media_id, $product_ids, $storeId);
-					$flag = 0;
-					if (in_array("IMAGE", $type) && in_array("VIDEO", $type)) {
-						$flag = 1;
-					} elseif (in_array("IMAGE", $type)) {
-						$flag = 2;
-					} elseif (in_array("VIDEO", $type)) {
-						$flag = 3;
-					}
-					$new_value_array = json_encode($array_merge, true);
-					
-					$updated_values = [
-						'bynder_multi_img' => $new_value_array,
-						'bynder_isMain' => $flag,
-						'bynder_auto_replace' => 1
-					];
-					
-					$this->action->updateAttributes(
-						[$product_ids],
-						$updated_values,
-						$storeId
-					);
-                } 
+                    $this->getInsertMedaiDataTable($product_sku_key, $media_id, $product_ids, $storeId);
+                    $flag = 0;
+                    if (in_array("IMAGE", $type) && in_array("VIDEO", $type)) {
+                        $flag = 1;
+                    } elseif (in_array("IMAGE", $type)) {
+                        $flag = 2;
+                    } elseif (in_array("VIDEO", $type)) {
+                        $flag = 3;
+                    }
+                    $new_value_array = json_encode($array_merge, true);
+                    $updated_values = [
+                        'bynder_multi_img' => $new_value_array,
+                        'bynder_isMain' => $flag,
+                        'bynder_auto_replace' => 1
+                    ];
+                    $this->action->updateAttributes(
+                        [$product_ids],
+                        $updated_values,
+                        $storeId
+                    );
+                }
             } elseif ($select_attribute == "video") {
                 if (!empty($image_value)) {
                     $new_video_array = explode(" \n", $img_json);
@@ -682,7 +715,7 @@ class AutoAddFromMagento
                                 'media_id' => $bynder_media_id[$vv],
                                 'data_type' => '3'
                             ];
-                            //$this->getInsertDataTable($data_video_data);
+                            $this->getInsertDataTable($data_video_data);
                         }
                     }
                     if (!empty($old_value_array)) {
@@ -741,7 +774,7 @@ class AutoAddFromMagento
                             'media_id' => $media_video_explode[5],
                             'data_type' => '3'
                         ];
-                        //$this->getInsertDataTable($data_video_data);
+                        $this->getInsertDataTable($data_video_data);
 
                     }
                     foreach ($video_detail as $img) {
@@ -793,7 +826,7 @@ class AutoAddFromMagento
                             'media_id' => $bynder_media_id[$vv],
                             'data_type' => '2'
                         ];
-                        //$this->getInsertDataTable($data_doc_value);
+                        $this->getInsertDataTable($data_doc_value);
                     }
                     $new_value_array = json_encode($doc_detail, true);
                     $this->action->updateAttributes(
@@ -810,7 +843,7 @@ class AutoAddFromMagento
                 'media_id' => "",
                 "data_type" => ""
             ];
-            //$this->getInsertDataTable($insert_data);
+            $this->getInsertDataTable($insert_data);
         }
     }
 

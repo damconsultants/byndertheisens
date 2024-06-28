@@ -7,7 +7,26 @@ class Getsku extends \Magento\Backend\App\Action
     /**
      * @var \Magento\Framework\View\Result\PageFactory
      */
+    /**
+     * @var $resultPageFactory;
+     */
     protected $resultPageFactory = false;
+    /**
+     * @var $resultPageFactory;
+     */
+    protected $attribute;
+    /**
+     * @var $resultPageFactory;
+     */
+    protected $collectionFactory;
+    /**
+     * @var $resultPageFactory;
+     */
+    protected $resultJsonFactory;
+    /**
+     * @var $resultPageFactory;
+     */
+    protected $productAttributeManagementInterface;
 
     /**
      * Get Sku.

@@ -3,6 +3,7 @@
 namespace DamConsultants\BynderTheisens\Controller\Adminhtml\Index;
 
 use DamConsultants\BynderTheisens\Model\ResourceModel\Collection\MetaPropertyCollectionFactory;
+use DamConsultants\BynderTheisens\Model\ResourceModel\Collection\BynderMediaTableCollectionFactory;
 
 class Psku extends \Magento\Backend\App\Action
 {
@@ -10,6 +11,46 @@ class Psku extends \Magento\Backend\App\Action
      * @var \Magento\Framework\View\Result\PageFactory
      */
     protected $resultPageFactory = false;
+    /**
+     * @var $resultJsonFactory
+     */
+    protected $resultJsonFactory;
+    /**
+     * @var $productAction
+     */
+    protected $productAction;
+    /**
+     * @var $storeManagerInterface
+     */
+    protected $storeManagerInterface;
+    /**
+     * @var $metaPropertyCollectionFactory
+     */
+    protected $metaPropertyCollectionFactory;
+    /**
+     * @var $bynderMediaTable
+     */
+    protected $bynderMediaTable;
+    /**
+     * @var $bynderMediaTableCollectionFactory
+     */
+    protected $bynderMediaTableCollectionFactory;
+    /**
+     * @var $datahelper
+     */
+    protected $datahelper;
+    /**
+     * @var $_byndersycData
+     */
+    protected $_byndersycData;
+    /**
+     * @var $_productRepository
+     */
+    protected $_productRepository;
+    /**
+     * @var $product
+     */
+    protected $product;
 
     /**
      * Product Sku.
@@ -17,6 +58,8 @@ class Psku extends \Magento\Backend\App\Action
      * @param \Magento\Catalog\Model\Product\Action $action
      * @param \Magento\Store\Model\StoreManagerInterface $storeManagerInterface
      * @param \DamConsultants\BynderTheisens\Model\BynderConfigSyncDataFactory $byndersycData
+     * @param \DamConsultants\BynderTheisens\Model\BynderMediaTableFactory $bynderMediaTable
+     * @param BynderMediaTableCollectionFactory $bynderMediaTableCollectionFactory
      * @param \Magento\Catalog\Model\Product $product
      * @param \Magento\Catalog\Model\ProductRepository $productRepository
      * @param MetaPropertyCollectionFactory $metaPropertyCollectionFactory
@@ -28,8 +71,8 @@ class Psku extends \Magento\Backend\App\Action
         \Magento\Catalog\Model\Product\Action $action,
         \Magento\Store\Model\StoreManagerInterface $storeManagerInterface,
         \DamConsultants\BynderTheisens\Model\BynderConfigSyncDataFactory $byndersycData,
-		 \DamConsultants\BynderTheisens\Model\BynderMediaTableFactory $bynderMediaTable,
-        \DamConsultants\BynderTheisens\Model\ResourceModel\Collection\BynderMediaTableCollectionFactory $bynderMediaTableCollectionFactory,
+        \DamConsultants\BynderTheisens\Model\BynderMediaTableFactory $bynderMediaTable,
+        BynderMediaTableCollectionFactory $bynderMediaTableCollectionFactory,
         \Magento\Catalog\Model\Product $product,
         \Magento\Catalog\Model\ProductRepository $productRepository,
         MetaPropertyCollectionFactory $metaPropertyCollectionFactory,
@@ -41,7 +84,7 @@ class Psku extends \Magento\Backend\App\Action
         $this->productAction = $action;
         $this->storeManagerInterface = $storeManagerInterface;
         $this->metaPropertyCollectionFactory = $metaPropertyCollectionFactory;
-		$this->bynderMediaTable = $bynderMediaTable;
+        $this->bynderMediaTable = $bynderMediaTable;
         $this->bynderMediaTableCollectionFactory = $bynderMediaTableCollectionFactory;
         $this->datahelper = $DataHelper;
         $this->_byndersycData = $byndersycData;
@@ -77,7 +120,11 @@ class Psku extends \Magento\Backend\App\Action
                 foreach ($productSku as $sku) {
                     if ($sku != "") {
                         $bd_sku = trim(preg_replace('/[^A-Za-z0-9]/', '_', $sku));
-                        $get_data = $this->datahelper->getImageSyncWithProperties($bd_sku, $property_id, $collection_value);
+                        $get_data = $this->datahelper->getImageSyncWithProperties(
+                            $bd_sku,
+                            $property_id,
+                            $collection_value
+                        );
                         $getIsJson = $this->getIsJSON($get_data);
                         if (!empty($get_data) && $getIsJson) {
                             $respon_array = json_decode($get_data, true);
@@ -86,7 +133,12 @@ class Psku extends \Magento\Backend\App\Action
                                 if ($convert_array['status'] == 1) {
                                     $current_sku = $sku;
                                     try {
-                                        $this->getDataItem($select_attribute, $convert_array, $collection_slug_val, $current_sku);
+                                        $this->getDataItem(
+                                            $select_attribute,
+                                            $convert_array,
+                                            $collection_slug_val,
+                                            $current_sku
+                                        );
                                     } catch (Exception $e) {
                                         $insert_data = [
                                             "sku" => $sku,
@@ -204,54 +256,59 @@ class Psku extends \Magento\Backend\App\Action
         $model->setData($data_image_data);
         $model->save();
     }
-	/**
+    /**
      * Is Json
      *
-     * @param array $insert_data
+     * @param string $sku
+     * @param string $m_id
+     * @param string $product_ids
+     * @param string $storeId
      * @return $this
      */
     public function getInsertMedaiDataTable($sku, $m_id, $product_ids, $storeId)
     {
         $model = $this->bynderMediaTable->create();
-        $modelcollection = $this->bynderMediaTableCollectionFactory->create()->addFieldToFilter('sku', ['eq' => [$sku]])->load();
+        $modelcollection = $this->bynderMediaTableCollectionFactory->create();
+        $modelcollection->addFieldToFilter('sku', ['eq' => [$sku]])->load();
         $table_m_id = [];
-        if(!empty($modelcollection)) {
-            foreach($modelcollection as $mdata) {
+        if (!empty($modelcollection)) {
+            foreach ($modelcollection as $mdata) {
                 $table_m_id[] = $mdata['media_id'];
             }
         }
         $media_diff = array_diff($m_id, $table_m_id);
-        foreach ($media_diff as $new_data){
-			$new_m_id = trim($new_data);
+        foreach ($media_diff as $new_data) {
+            $new_m_id = trim($new_data);
             $data_image_data = [
                 'sku' => $sku,
                 'media_id' => $new_m_id,
                 'status' => "1",
             ];
             $model->setData($data_image_data);
-			$model->save();
+            $model->save();
         }
-		$updated_values = [
-			'bynder_delete_cron' => 1
-		];
-		$this->productAction->updateAttributes(
-			[$product_ids],
-			$updated_values,
-			$storeId
-		);
-		
+        $updated_values = [
+            'bynder_delete_cron' => 1
+        ];
+        $this->productAction->updateAttributes(
+            [$product_ids],
+            $updated_values,
+            $storeId
+        );
     }
-     /**
+    /**
      * Is Json
      *
-     * @param array $insert_data
+     * @param string $sku
+     * @param string $media_id
      * @return $this
      */
     public function getDeleteMedaiDataTable($sku, $media_id)
     {
-        $model = $this->bynderMediaTableCollectionFactory->create()->addFieldToFilter('sku', ['eq' => [$sku]])->load();
-        foreach($model as $mdata){
-            if($mdata['media_id'] != $media_id){
+        $model = $this->bynderMediaTableCollectionFactory->create();
+        $model->addFieldToFilter('sku', ['eq' => [$sku]])->load();
+        foreach ($model as $mdata) {
+            if ($mdata['media_id'] != $media_id) {
                 $this->bynderMediaTable->create()->load($mdata['id'])->delete();
 
             }
@@ -264,6 +321,7 @@ class Psku extends \Magento\Backend\App\Action
      * @param array $convert_array
      * @param array $collection_data_slug_val
      * @param array $current_sku
+     * @return this
      */
     public function getDataItem($select_attribute, $convert_array, $collection_data_slug_val, $current_sku)
     {
@@ -416,7 +474,7 @@ class Psku extends \Magento\Backend\App\Action
         $result = $this->resultJsonFactory->create();
         $select_attribute = $this->getRequest()->getParam('select_attribute');
         $image_detail = [];
-		$diff_image_detail = [];
+        $diff_image_detail = [];
         try {
             
             $storeId = $this->storeManagerInterface->getStore()->getId();
@@ -436,7 +494,6 @@ class Psku extends \Magento\Backend\App\Action
             if ($select_attribute == "image") {
                 if (!empty($image_value)) {
                     $new_image_array = explode("\n", $img_json);
-					
                     $bynder_media_id = explode("\n", $bynder_media_ids);
                     $new_alttext_array = explode("\n", $img_alt_text);
                     $new_magento_role_option_array = explode("\n", $mg_img_role_option);
@@ -463,15 +520,15 @@ class Psku extends \Magento\Backend\App\Action
                             if ($new_magento_role_option_array[$vv] != "###") {
                                 $curt_img_role = [$new_magento_role_option_array[$vv]];
                             }
-							$image_detail[] = [
-								"item_url" => $new_image_value,
-								"alt_text" => $img_altText_val,
-								"image_role" => $curt_img_role,
-								"item_type" => 'IMAGE',
-								"thum_url" => $item_url[0],
-								"bynder_md_id" => $bynder_media_id[$vv],
-								"is_import" => 0
-							];
+                            $image_detail[] = [
+                                "item_url" => $new_image_value,
+                                "alt_text" => $img_altText_val,
+                                "image_role" => $curt_img_role,
+                                "item_type" => 'IMAGE',
+                                "thum_url" => $item_url[0],
+                                "bynder_md_id" => $bynder_media_id[$vv],
+                                "is_import" => 0
+                            ];
                             if (!in_array($item_url[0], $all_item_url)) {
                                 $diff_image_detail[] = [
                                     "item_url" => $new_image_value,
@@ -513,26 +570,26 @@ class Psku extends \Magento\Backend\App\Action
                             }
                         }
                     }
-					$d_img_roll = "";
+                    $d_img_roll = "";
                     $d_media_id = [];
-					if (count($diff_image_detail) > 0) {
+                    if (count($diff_image_detail) > 0) {
                         foreach ($diff_image_detail as $d_img) {
                             $d_img_roll = $d_img['image_role'];
                             $d_media_id[] =  $d_img['bynder_md_id'];
                         }
                         $this->getInsertMedaiDataTable($product_sku_key, $d_media_id, $product_ids, $storeId);
                     }
-					$new_image_detail = [];
-					if (count($image_detail) > 0) {
+                    $new_image_detail = [];
+                    if (count($image_detail) > 0) {
                         foreach ($image_detail as $img) {
                             $image[] = $img['item_url'];
                         }
                         foreach ($item_old_value as $img) {
                             if ($img['item_type'] == 'IMAGE') {
                                 $item_img_url = $img['item_url'];
-                            } 
+                            }
                             if (in_array($item_img_url, $image)) {
-								 $item_key = array_search($img['item_url'],array_column($image_detail,"item_url"));
+                                $item_key = array_search($img['item_url'], array_column($image_detail, "item_url"));
                                 $new_image_detail[] = [
                                     "item_url" => $item_img_url,
                                     "alt_text" => $image_detail[$item_key]['alt_text'],
@@ -545,15 +602,15 @@ class Psku extends \Magento\Backend\App\Action
                             }
                         }
                     }
-					$array_merge = array_merge($new_image_detail, $diff_image_detail);
-					$media_id = [];
+                    $array_merge = array_merge($new_image_detail, $diff_image_detail);
+                    $media_id = [];
                     foreach ($array_merge as $img) {
                         $type[] = $img['item_type'];
                         $image[] = $img['item_url'];
-						$media_id[] = $img['bynder_md_id'];
-						$this->getDeleteMedaiDataTable($product_sku_key, $img['bynder_md_id']);
+                        $media_id[] = $img['bynder_md_id'];
+                        $this->getDeleteMedaiDataTable($product_sku_key, $img['bynder_md_id']);
                     }
-					$this->getInsertMedaiDataTable($product_sku_key, $media_id, $product_ids, $storeId);
+                    $this->getInsertMedaiDataTable($product_sku_key, $media_id, $product_ids, $storeId);
                     $image_value_array = implode(',', $image);
                     $flag = 0;
                     if (in_array("IMAGE", $type) && in_array("VIDEO", $type)) {
@@ -632,14 +689,14 @@ class Psku extends \Magento\Backend\App\Action
                             }
                         }
                     }
-					$media_id = [];
+                    $media_id = [];
                     foreach ($image_detail as $img) {
                         $type[] = $img['item_type'];
                         $image[] = $img['item_url'];
-						$m_id[] = $img['bynder_md_id'];
-						$this->getDeleteMedaiDataTable($product_sku_key, $img['bynder_md_id']);
-					}
-					$this->getInsertMedaiDataTable($product_sku_key, $m_id, $product_ids, $storeId);
+                        $m_id[] = $img['bynder_md_id'];
+                        $this->getDeleteMedaiDataTable($product_sku_key, $img['bynder_md_id']);
+                    }
+                    $this->getInsertMedaiDataTable($product_sku_key, $m_id, $product_ids, $storeId);
                     $image_value_array = implode(',', $image);
                     
                     $flag = 0;

@@ -10,6 +10,18 @@ class Submit extends \Magento\Backend\App\Action
      * @var \Magento\Framework\View\Result\PageFactory
      */
     protected $resultPageFactory = false;
+    /**
+     * @var $_helperData
+     */
+    protected $_helperData;
+    /**
+     * @var $metaProperty
+     */
+    protected $metaProperty;
+    /**
+     * @var $metaPropertyCollectionFactory
+     */
+    protected $metaPropertyCollectionFactory;
 
     /**
      * Submit.

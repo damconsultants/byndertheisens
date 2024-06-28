@@ -16,14 +16,17 @@ use DamConsultants\BynderTheisens\Helper\Data;
 class Index extends \Magento\Framework\App\Action\Action
 {
     /**
-     * @var $bynderDomain
+     * @var $b_datahelper
      */
-    public $bynderDomain = "";
-
+    protected $b_datahelper;
     /**
-     * @var $permanent_token
+     * @var $file
      */
-    public $permanent_token = "";
+    protected $file;
+    /**
+     * @var $driverFile
+     */
+    protected $driverFile;
     
     /**
      * Index.

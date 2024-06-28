@@ -56,6 +56,14 @@ class Content extends \Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Galle
      * @var Database
      */
     private $fileStorageDatabase;
+    /**
+     * @var Database
+     */
+    protected $request;
+    /**
+     * @var Database
+     */
+    protected $b_datahelper;
 
     /**
      * Catalog product form gallery content

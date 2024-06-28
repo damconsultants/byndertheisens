@@ -918,27 +918,27 @@ $get_base_url = $block->getBaseUrl();
                         } else {
                             jQuery('textarea[name="product[bynder_multi_img]"]').val("");
                         }
-						jQuery('textarea[name="product[bynder_videos]"]').val("");
-						/*document.cookie = "bynder_image=" + myJsonString + "; path=/;";*/
-						var image_coockie_id = 0;
-						try{
-							image_coockie_id = Cookies.get('image_coockie_id');
-						}catch(err){
-							document.cookie = "image_coockie_id=" + image_coockie_id + "; path=/;";
-						}
-						var product_id = '<?= $block->escapeHtml($product_id); ?>';
-						$.ajax({
-							url: add_temp_data,
-							showLoader: true,
-							data: {
-								product_id: product_id,
-								image:myJsonString,
-								image_coockie_id:image_coockie_id
-							},
-							success: function (res) {
-								/* success data*/
-							},
-						});
+                        jQuery('textarea[name="product[bynder_videos]"]').val("");
+                        /*document.cookie = "bynder_image=" + myJsonString + "; path=/;";*/
+                        var image_coockie_id = 0;
+                        try{
+                           image_coockie_id = Cookies.get('image_coockie_id');
+                        }catch(err){
+                           document.cookie = "image_coockie_id=" + image_coockie_id + "; path=/;";
+                        }
+                        var product_id = '<?= $block->escapeHtml($product_id); ?>';
+                        $.ajax({
+                            url: add_temp_data,
+                            showLoader: true,
+                            data: {
+                                product_id: product_id,
+                                image:myJsonString,
+                                image_coockie_id:image_coockie_id
+                            },
+                            success: function (res) {
+                                /* success data*/
+                            },
+                        });
                     }
                 }else{
                     if (all_selected_images != '') {
@@ -947,27 +947,27 @@ $get_base_url = $block->getBaseUrl();
                         } else {
                             jQuery('textarea[name="product[bynder_multi_img]"]').val("");
                         }
-						jQuery('textarea[name="product[bynder_videos]"]').val("");
-						/*document.cookie = "bynder_image=" + myJsonString + "; path=/;";*/
-						var image_coockie_id = 0;
-						try{
-							image_coockie_id = Cookies.get('image_coockie_id');
-						}catch(err){
-							document.cookie = "image_coockie_id=" + image_coockie_id + "; path=/;";
-						}
-						var product_id = '<?= $block->escapeHtml($product_id); ?>';
-						$.ajax({
-							url: add_temp_data,
-							showLoader: true,
-							data: {
-								product_id: product_id,
-								image:myJsonString,
-								image_coockie_id:image_coockie_id
-							},
-							success: function (res) {
-								/* success data*/
-							},
-						});
+                        jQuery('textarea[name="product[bynder_videos]"]').val("");
+                        /*document.cookie = "bynder_image=" + myJsonString + "; path=/;";*/
+                        var image_coockie_id = 0;
+                        try{
+                           image_coockie_id = Cookies.get('image_coockie_id');
+                        }catch(err){
+                           document.cookie = "image_coockie_id=" + image_coockie_id + "; path=/;";
+                        }
+                        var product_id = '<?= $block->escapeHtml($product_id); ?>';
+                        $.ajax({
+                            url: add_temp_data,
+                            showLoader: true,
+                            data: {
+                                product_id: product_id,
+                                image:myJsonString,
+                                image_coockie_id:image_coockie_id
+                            },
+                            success: function (res) {
+                                /* success data*/
+                            },
+                        });
                 }
         });
         jQuery('#import_image_bynder').click(function () {

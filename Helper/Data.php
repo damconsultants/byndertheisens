@@ -13,11 +13,6 @@ class Data extends AbstractHelper
     protected $storeScope;
 
     /**
-     * @var $productrepository
-     */
-    protected $productrepository;
-
-    /**
      * @var \Magento\Framework\Filesystem
      */
     protected $filesystem;
@@ -41,16 +36,44 @@ class Data extends AbstractHelper
      * @var $permanent_token
      */
     public $permanent_token = "";
+    /**
+     * @var $permanent_token
+     */
+    protected $cookieMetadataFactory;
+    /**
+     * @var $permanent_token
+     */
+    protected $cookieManager;
+    /**
+     * @var $permanent_token
+     */
+    protected $productrepository;
+    /**
+     * @var $permanent_token
+     */
+    protected $_storeManager;
+    /**
+     * @var $permanent_token
+     */
+    protected $_curl;
+    /**
+     * @var $permanent_token
+     */
+    protected $_bulk;
+    /**
+     * @var $permanent_token
+     */
+    protected $_registry;
 
     public const BYNDER_DOMAIN = 'bynderconfig/bynder_credential/bynderdomain';
     public const PERMANENT_TOKEN = 'bynderconfig/bynder_credential/permanent_token';
     public const LICENCE_TOKEN = 'bynderconfig/bynder_credential/licenses_key';
     public const RADIO_BUTTON = 'byndeimageconfig/bynder_image/selectimage';
     public const PRODUCT_SKU_LIMIT = 'cronimageconfig/set_limit_product_sku/product_sku_limt';
-	public const FETCH_CRON = 'cronimageconfig/configurable_cron/fetch_enable';
-	public const AUTO_CRON = 'cronimageconfig/auto_add_bynder/auto_enable';
+    public const FETCH_CRON = 'cronimageconfig/configurable_cron/fetch_enable';
+    public const AUTO_CRON = 'cronimageconfig/auto_add_bynder/auto_enable';
     public const API_CALLED = 'https://developer.thedamconsultants.com/';
-	public const DELETE_CRON = 'cronimageconfig/delete_cron_bynder/delete_enable';
+    public const DELETE_CRON = 'cronimageconfig/delete_cron_bynder/delete_enable';
 
     /**
      * Data Helper
@@ -127,16 +150,17 @@ class Data extends AbstractHelper
     {
         return $this->getConfig(self::FETCH_CRON);
     }
-	/**
+    /**
      * Get Permanent Token
      *
+     * @param string $path
      * @return $this
      */
     public function getDeleteCron($path)
     {
         return (string) $this->getStoreConfig($path);
     }
-	/**
+    /**
      * Get Auto cron enable
      *
      * @return $this
@@ -145,7 +169,7 @@ class Data extends AbstractHelper
     {
         return $this->getConfig(self::DELETE_CRON);
     }
-	/**
+    /**
      * Get Auto cron enable
      *
      * @return $this
@@ -813,8 +837,13 @@ class Data extends AbstractHelper
         $response = $this->_curl->getBody();
         return $response;
     }
-	public function getCheckBynderSideDeleteData($bynder_auth)
-	{
+    /**
+     * CheckBynderSideDeleteData
+     *
+     * @param array $bynder_auth
+     */
+    public function getCheckBynderSideDeleteData($bynder_auth)
+    {
         $getBaseUrl = $this->_storeManager->getStore()->getBaseUrl();
         $fields = [
             'domain_name' => $this->_storeManager->getStore()->getBaseUrl(),
@@ -841,5 +870,7 @@ class Data extends AbstractHelper
 
         $response = $this->_curl->getBody();
         return $response;
-	}
+        /*$response = '{"status":1,"data":[{"id":"48DADC72-8775-4CCC-81764EC55395E178"},{"id":"D49C3C3C-8091-4CA0-8D27C36BA14B15D7"}]}';
+        return $response;*/
+    }
 }

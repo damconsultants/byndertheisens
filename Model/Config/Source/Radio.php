@@ -5,6 +5,14 @@ namespace DamConsultants\BynderTheisens\Model\Config\Source;
 class Radio implements \Magento\Framework\Data\OptionSourceInterface
 {
     /**
+     * @var $bulk
+     */
+    protected $bulk;
+    /**
+     * @var $_options
+     */
+    protected $_options;
+    /**
      * Radio
      * @param \Magento\ConfigurableProduct\Block\Adminhtml\Product\Steps\Bulk $bulk
      */

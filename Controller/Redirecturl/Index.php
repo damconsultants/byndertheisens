@@ -18,6 +18,14 @@ use Magento\Framework\App\Action\Action;
 class Index extends Action
 {
     /**
+     * @var $redirecturi
+     */
+    protected $redirecturi;
+    /**
+     * @var $b_datahelper
+     */
+    protected $b_datahelper;
+    /**
      * Index.
      * @param \Magento\Backend\App\Action\Context $context
      * @param \DamConsultants\BynderTheisens\Helper\Data $bynderData

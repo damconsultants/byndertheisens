@@ -7,9 +7,9 @@ use Magento\Backend\App\Action\Context;
 class DeleteCronSyncData extends Action
 {
     /**
-     * @var $BynderConfigSyncDataFactory
+     * @var $bynderSycDataFactory
      */
-    public $BynderConfigSyncDataFactory;
+    public $bynderSycDataFactory;
     /**
      * Closed constructor.
      *

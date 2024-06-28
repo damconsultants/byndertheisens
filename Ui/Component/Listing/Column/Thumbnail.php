@@ -28,6 +28,10 @@ class Thumbnail extends \Magento\Ui\Component\Listing\Columns\Column
      * @var \Magento\Framework\UrlInterface
      */
     private $urlBuilder;
+    /**
+     * @var $_productRepository
+     */
+    protected $_productRepository;
 
     /**
      * @param ContextInterface $context

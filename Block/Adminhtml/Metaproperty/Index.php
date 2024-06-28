@@ -9,17 +9,17 @@ class Index extends \Magento\Backend\Block\Template
     /**
      * @var \DamConsultants\BynderTheisens\Helper\Data
      */
-    protected $helperdata;
+    protected $_helperdata;
 
     /**
      * @var \DamConsultants\BynderTheisens\Model\MetaPropertyFactory
      */
-    protected $metaProperty;
+    protected $_metaProperty;
 
     /**
      * @var \DamConsultants\BynderTheisens\Model\ResourceModel\Collection\MetaPropertyCollectionFactory
      */
-    protected $metaPropertyCollectionFactory;
+    protected $_metaPropertyCollectionFactory;
 
     /**
      * Metaproperty

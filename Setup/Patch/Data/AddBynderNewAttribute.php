@@ -68,8 +68,6 @@ class AddBynderNewAttribute implements DataPatchInterface
             'used_in_product_listing' => true,
             'apply_to' => ''
         ]);
-
-
         $this->moduleDataSetup->getConnection()->endSetup();
     }
 

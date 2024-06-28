@@ -18,21 +18,14 @@ use DamConsultants\BynderTheisens\Model\ResourceModel\Collection\MetaPropertyCol
 
 class Index extends \Magento\Framework\App\Action\Action
 {
-
     /**
-     * @var $bynderDomain
+     * @var $metaPropertyCollectionFactory
      */
-    public $bynderDomain = "";
-
+    public $metaPropertyCollectionFactory;
     /**
-     * @var $permanent_token
+     * @var $b_datahelper
      */
-    public $permanent_token = "";
-
-    /**
-     * @var $by_redirecturl
-     */
-    public $by_redirecturl;
+    public $b_datahelper;
 
     /**
      * Index

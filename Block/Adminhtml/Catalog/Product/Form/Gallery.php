@@ -9,7 +9,30 @@ class Gallery extends \Magento\Backend\Block\Template
      * @var string
      */
     protected $_template = 'group/gallery.phtml';
-
+    /**
+     * @var Database
+     */
+    protected $_storeManager;
+    /**
+     * @var Database
+     */
+    protected $_bulk;
+    /**
+     * @var Database
+     */
+    protected $_registry;
+    /**
+     * @var Database
+     */
+    protected $_image;
+    /**
+     * @var Database
+     */
+    protected $_helperData;
+    /**
+     * @var Database
+     */
+    protected $helper;
     /**
      * Gallery
      * @param \Magento\Backend\Block\Template\Context $context

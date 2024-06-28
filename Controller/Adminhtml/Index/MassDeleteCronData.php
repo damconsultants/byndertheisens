@@ -9,10 +9,26 @@ use DamConsultants\BynderTheisens\Model\ResourceModel\Collection\BynderDeleteDat
 
 class MassDeleteCronData extends Action
 {
+    /**
+     * @var $collectionFactory
+     */
     public $collectionFactory;
-
+    /**
+     * @var $collectionFactory
+     */
     public $filter;
-
+    /**
+     * @var $collectionFactory
+     */
+    protected $bynderFactory;
+    /**
+     * Get Sku.
+     *
+     * @param Context $context
+     * @param Filter $filter
+     * @param BynderDeleteDataCollectionFactory $collectionFactory
+     * @param \DamConsultants\BynderTheisens\Model\BynderDeleteDataFactory $bynderFactory
+     */
     public function __construct(
         Context $context,
         Filter $filter,
@@ -24,7 +40,9 @@ class MassDeleteCronData extends Action
         $this->bynderFactory = $bynderFactory;
         parent::__construct($context);
     }
-
+    /**
+     * Execute
+     */
     public function execute()
     {
         try {
@@ -42,7 +60,9 @@ class MassDeleteCronData extends Action
         }
         return $this->resultFactory->create(ResultFactory::TYPE_REDIRECT)->setPath('bynder/index/deletecrongrid');
     }
-
+    /**
+     * Execute
+     */
     public function _isAllowed()
     {
         return $this->_authorization->isAllowed('DamConsultants_BynderDAM::delete');

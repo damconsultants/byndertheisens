@@ -9,7 +9,19 @@ class ReSyncData extends Action
     /**
      * @var $BynderConfigSyncDataFactory
      */
-    public $BynderConfigSyncDataFactory;
+    public $bynderSycDataFactory;
+    /**
+     * @var $_productRepository
+     */
+    protected $_productRepository;
+    /**
+     * @var $action
+     */
+    protected $action;
+    /**
+     * @var $storeManagerInterface
+     */
+    protected $storeManagerInterface;
     /**
      * Closed constructor.
      *

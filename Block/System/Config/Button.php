@@ -15,6 +15,22 @@ class Button extends Field
      * @var string
      */
     protected $_template = 'DamConsultants_BynderTheisens::system/config/button.phtml';
+    /**
+     * @var $_storeManager
+     */
+    protected $_storeManager;
+    /**
+     * @var $HelperBackend
+     */
+    protected $HelperBackend;
+    /**
+     * @var $_toHtml
+     */
+    protected $_toHtml;
+    /**
+     * @var $getUrl
+     */
+    protected $getUrl;
 
     /**
      * Button

@@ -5,6 +5,7 @@ use Exception;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
+use DamConsultants\BynderTheisens\Model\ResourceModel\Collection\BynderSycDataCollectionFactory;
 
 class ReSyncData extends \Magento\Ui\Component\Listing\Columns\Column
 {
@@ -12,6 +13,22 @@ class ReSyncData extends \Magento\Ui\Component\Listing\Columns\Column
      * @var urlBuilder
      */
     public $urlBuilder;
+    /**
+     * @var _resource
+     */
+    public $_resource;
+    /**
+     * @var bynderSycDataFactory
+     */
+    public $bynderSycDataFactory;
+    /**
+     * @var _productRepository
+     */
+    protected $_productRepository;
+    /**
+     * @var bynderSycDataCollectionFactory
+     */
+    protected $bynderSycDataCollectionFactory;
     /**
      * Closed constructor.
      *
@@ -21,6 +38,7 @@ class ReSyncData extends \Magento\Ui\Component\Listing\Columns\Column
      * @param \DamConsultants\BynderTheisens\Model\BynderSycDataFactory $BynderSycDataFactory
      * @param \Magento\Framework\App\ResourceConnection $resource
      * @param UrlInterface $urlBuilder
+     * @param BynderSycDataCollectionFactory $bynderSycDataCollectionFactory
      * @param array $components
      * @param array $data
      */
@@ -31,6 +49,7 @@ class ReSyncData extends \Magento\Ui\Component\Listing\Columns\Column
         \DamConsultants\BynderTheisens\Model\BynderSycDataFactory $BynderSycDataFactory,
         \Magento\Framework\App\ResourceConnection $resource,
         UrlInterface $urlBuilder,
+        BynderSycDataCollectionFactory $bynderSycDataCollectionFactory,
         array $components = [],
         array $data = []
     ) {
@@ -38,6 +57,7 @@ class ReSyncData extends \Magento\Ui\Component\Listing\Columns\Column
         $this->_resource = $resource;
         $this->bynderSycDataFactory = $BynderSycDataFactory;
         $this->_productRepository = $productRepository;
+		$this->bynderSycDataCollectionFactory = $bynderSycDataCollectionFactory;
         parent::__construct($context, $uiComponentFactory, $components, $data);
     }
     /**
@@ -73,7 +93,11 @@ class ReSyncData extends \Magento\Ui\Component\Listing\Columns\Column
                         }
                     }
                 } catch (Exception $e) {
-                    $this->bynderSycDataFactory->create()->addFieldToFilter('sku', ['eq' => [$sku]])->delete();
+                    $collection = $this->bynderSycDataCollectionFactory->create()
+                    ->addFieldToFilter('sku', ['eq' => $sku])->load();
+                    foreach ($collection as $itemToDelete) {
+                        $this->bynderSycDataFactory->create()->load($itemToDelete->getId())->delete();
+                    }
                 }
             }
         }

@@ -6,7 +6,10 @@ use DamConsultants\BynderTheisens\Model\ResourceModel\Collection\BynderDeleteDat
 
 class DeleteProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
 {
-
+    /**
+     * @var $collection
+     */
+    protected $collection;
     /**
      * @param BynderDeleteDataCollectionFactory $BynderDeleteDataCollectionFactory
      * @param string $name
