@@ -242,27 +242,19 @@ class ProductDataSaveAfter implements ObserverInterface
                         $deleted_sku_value = "";
                         if (!in_array($old_url_link, $all_new_urls)) {
                             /* need to delete either role or roles and sku */
-                            if (in_array($old_media_id, $all_new_array_media_ids)) {
-                                /** means same media id other role values present */
-                                $remove_type = "role";
-                                $change_metapropeties_id = $collection_data_slug_val["image_role"]["property_id"];
-                                if (count($old_val["image_role"]) > 0) {
-                                    $change_roles = $old_val["image_role"];
-                                }
-                            } else {
-                                /** means no one same media assets present to this product so remove sku */
-                                $remove_type = "sku";
+                            if (!in_array($old_media_id, $all_new_array_media_ids)) {
+								$remove_type = "sku";
                                 $change_metapropeties_id = $collection_data_slug_val["sku"]["property_id"];
                                 $deleted_sku_value = $product_sku_key;
+								$all_deleted_new_items[] = [
+									"media_id" => $old_media_id,
+									"remove_type" => $remove_type,
+									"main_Properties_id" => $change_metapropeties_id,
+									"deleted_sku_value" => $deleted_sku_value,
+									"deleted_role_value" => $change_roles,
+									"all_magento_roll_delete" => 1
+								];
                             }
-                            $all_deleted_items[] = $oldBynderArray[$old_key];
-                            $all_deleted_new_items[] = [
-                                "media_id" => $old_media_id,
-                                "remove_type" => $remove_type,
-                                "main_Properties_id" => $change_metapropeties_id,
-                                "deleted_sku_value" => $deleted_sku_value,
-                                "deleted_role_value" => $change_roles
-                            ];
                         }
                     }
                 }
