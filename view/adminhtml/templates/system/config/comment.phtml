@@ -1,15 +1,15 @@
 <?= $block->getButtonHtml(); ?>
 <div id="autoAddDataProduct" style="display:none;">
-    <b><h3>Once any bynder user/member add the sku in selected meta propety so those assest (items) automatically sync to magento using this cron job.</h3></b>
+    <b><h3>Use this cron job to retrieve anynew images and mapped attribute metadata from DAMthat should sync to an Adobe Commerce product.</h3></b>
 </div>
 <div id="autoReplaceDataProduct" style="display:none;">
     <b><h3>Once any bynder user/members remove sku from selected meta properties that will be update to magento as well.</h3></b>
 </div>
 <div id="featchNullSKUToMagento" style="display:none;">
-    <b><h3>Using this cron job, we are fetching all images from bynder which does not have any single images into magento product.</h3></b>
+    <b><h3>Use this cron job to retrieve all images from DAMthat should sync to an Adobe Commerce product that currently has no other images</h3></b>
 </div>
 <div id="DeleteDataProduct" style="display:none;">
-    <b><h3>Using this cron job, we are fetching all images from bynderdam which does not have any single images into magento product.</h3></b>
+    <b><h3>Use this cron job to remove SKU and/or image role from DAMafter being removed from Adobe Commerce product.</h3></b>
 </div>
 <script>
     require(

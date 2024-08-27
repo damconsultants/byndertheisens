@@ -92,7 +92,7 @@ class AutoAddDataProduct extends Field
         ->createBlock(\Magento\Backend\Block\Widget\Button::class)
         ->setData([
             'id'      => 'auto_replace_bynder_info',
-            'label'   => __("You don't know How to work this so Please Click Here..."),
+            'label'   => __("Click here for more information."),
             'onclick' => 'javascript:AutoAddDataProduct(); return false;',
         ]);
         return $activeButton->toHtml();

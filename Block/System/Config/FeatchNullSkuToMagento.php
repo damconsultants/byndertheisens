@@ -92,7 +92,7 @@ class FeatchNullSkuToMagento extends Field
         ->createBlock(\Magento\Backend\Block\Widget\Button::class)
         ->setData([
             'id'      => 'bynder_configurable_cron',
-            'label'   => __("You don't know How to work this so Please Click Here..."),
+            'label'   => __("Click here for more information."),
             'onclick' => 'javascript:FeatchNullSKUToMagento(); return false;',
         ]);
         return $activeButton->toHtml();

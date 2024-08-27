@@ -171,7 +171,7 @@ require([
 														
 														console.log(res);
 														if(res.dataset_type == "IMAGE") {
-															tag_html += '<img src="' + res.s3_link + '" class="bynder-view" >';
+															tag_html += '<img src="' + res.public_url + '" class="bynder-view" >';
 														}
 														else if(res.dataset_type == "VIDEO") {
 															if(video_url[res.bynderid] != undefined) {

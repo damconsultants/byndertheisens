@@ -86,7 +86,7 @@
                 </field>
             </group>
             <group id="configurable_cron" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1"  showInStore="0">
-                <label>Featch Null SKU To Magento</label>
+                <label>Add to Empty Product</label>
 				<field id="fetch_enable" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable Cron</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -124,7 +124,7 @@
                 
             </group>
             <group id="auto_add_bynder" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
-                <label>Auto Add Data Product</label>
+                <label>Add New Data</label>
 				<field id="auto_enable" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable Cron</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -160,7 +160,7 @@
                 </field>
             </group>
 			<group id="delete_cron_bynder" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
-                <label>Delete Data Product</label>
+                <label>Delete Data</label>
 				<field id="delete_enable" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Enable Cron</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

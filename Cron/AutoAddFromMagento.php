@@ -548,12 +548,13 @@ class AutoAddFromMagento
                     $new_magento_role_option_array = explode("\n", $mg_img_role_option);
                     $all_item_url = [];
                     $item_old_value = json_decode($image_value, true);
-                    if (count($item_old_value) > 0) {
-                        foreach ($item_old_value as $img) {
-                            $all_item_url[] = $img['thum_url'];
-                        }
+					if (is_array($item_old_value)) {
+						if (count($item_old_value) > 0) {
+							foreach ($item_old_value as $img) {
+								$all_item_url[] = $img['thum_url'];
+							}
+						}
                     }
-                    
                     foreach ($new_image_array as $vv => $new_image_value) {
                         if (trim($new_image_value) != "" && $new_image_value != "no image") {
                             $item_url = explode("?", $new_image_value);
@@ -597,20 +598,22 @@ class AutoAddFromMagento
                                 /*$this->getInsertDataTable($data_image_data);
                                 $model->setData($data_image_data);
                                 $model->save();*/
-                                if (count($item_old_value) > 0) {
-                                    foreach ($item_old_value as $kv => $img) {
-                                        if ($img['item_type'] == "IMAGE") {
-                                            /* here changes by me but not tested */
-                                            if ($new_magento_role_option_array[$vv] != "###") {
-                                                $new_mg_role_array = (array)$new_magento_role_option_array[$vv];
-                                                if (count($img["image_role"])>0 && count($new_mg_role_array)>0) {
-                                                    $result_val=array_diff($img["image_role"], $new_mg_role_array);
-                                                    $item_old_value[$kv]["image_role"] = $result_val;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+								if (is_array($item_old_value)) {
+									if (count($item_old_value) > 0) {
+										foreach ($item_old_value as $kv => $img) {
+											if ($img['item_type'] == "IMAGE") {
+												/* here changes by me but not tested */
+												if ($new_magento_role_option_array[$vv] != "###") {
+													$new_mg_role_array = (array)$new_magento_role_option_array[$vv];
+													if (count($img["image_role"])>0 && count($new_mg_role_array)>0) {
+														$result_val=array_diff($img["image_role"], $new_mg_role_array);
+														$item_old_value[$kv]["image_role"] = $result_val;
+													}
+												}
+											}
+										}
+									}
+								}
                                 $total_new_value = count($image_detail);
                                 if ($total_new_value > 1) {
                                     foreach ($image_detail as $nn => $n_img) {
@@ -641,23 +644,25 @@ class AutoAddFromMagento
                         foreach ($image_detail as $img) {
                             $image[] = $img['item_url'];
                         }
-                        foreach ($item_old_value as $img) {
-                            if ($img['item_type'] == 'IMAGE') {
-                                $item_img_url = $img['item_url'];
-                            }
-                            if (in_array($item_img_url, $image)) {
-                                $item_key = array_search($img['item_url'], array_column($image_detail, "item_url"));
-                                $new_image_detail[] = [
-                                    "item_url" => $item_img_url,
-                                    "alt_text" => $image_detail[$item_key]['alt_text'],
-                                    "image_role" => $image_detail[$item_key]['image_role'],
-                                    "item_type" => $img['item_type'],
-                                    "thum_url" => $img['thum_url'],
-                                    "bynder_md_id" => $img['bynder_md_id'],
-                                    "is_import" => $img['is_import']
-                                ];
-                            }
-                        }
+						if (is_array($item_old_value)) {
+							foreach ($item_old_value as $img) {
+								if ($img['item_type'] == 'IMAGE') {
+									$item_img_url = $img['item_url'];
+								}
+								if (in_array($item_img_url, $image)) {
+									$item_key = array_search($img['item_url'], array_column($image_detail, "item_url"));
+									$new_image_detail[] = [
+										"item_url" => $item_img_url,
+										"alt_text" => $image_detail[$item_key]['alt_text'],
+										"image_role" => $image_detail[$item_key]['image_role'],
+										"item_type" => $img['item_type'],
+										"thum_url" => $img['thum_url'],
+										"bynder_md_id" => $img['bynder_md_id'],
+										"is_import" => $img['is_import']
+									];
+								}
+							}
+						}
                     }
                     $array_merge = array_merge($new_image_detail, $diff_image_detail);
                     $media_id = [];
