@@ -12,6 +12,7 @@ class Checkbox extends Field
      *
      * @var string
      */
+	protected $_template = 'DamConsultants_BynderDAM::system/config/checkbox.phtml';
     /**
      * @var $_storeManager
      */
