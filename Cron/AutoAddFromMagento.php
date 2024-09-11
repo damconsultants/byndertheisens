@@ -143,6 +143,9 @@ class AutoAddFromMagento
             foreach ($productSku_array as $sku) {
                 if ($sku != "") {
                     $bd_sku = trim(preg_replace('/[^A-Za-z0-9]/', '_', $sku));
+					$storeId = $this->storeManagerInterface->getStore()->getId();
+					$_product = $this->_productRepository->get($bd_sku);
+					$product_ids = $_product->getId();
                     $get_data = $this->datahelper->getImageSyncWithProperties($bd_sku, $property_id, $collection_value);
                     if (!empty($get_data) && $this->getIsJSON($get_data)) {
                         $respon_array = json_decode($get_data, true);
@@ -162,6 +165,16 @@ class AutoAddFromMagento
                                 }
                                 
                             } else {
+								$updated_values = [
+									'bynder_multi_img' => null,
+									'bynder_isMain' => null,
+									'bynder_auto_replace' => null
+								];
+								$this->action->updateAttributes(
+									[$product_ids],
+									$updated_values,
+									$storeId
+								);
                                 $insert_data = [
                                     "sku" => $sku,
                                     "message" => $convert_array['data'],
@@ -524,6 +537,10 @@ class AutoAddFromMagento
      */
     public function getUpdateImage($img_json, $product_sku_key, $mg_img_role_option, $img_alt_text, $bynder_media_ids)
     {
+		$writer = new \Zend_Log_Writer_Stream(BP . '/var/log/AutoAddFromMagento.log');
+        $logger = new \Zend_Log();
+        $logger->addWriter($writer);
+        $logger->info("Auto Add Image Value");
         $diff_image_detail = [];
         $new_image_detail = [];
         $select_attribute = "image";
@@ -848,7 +865,8 @@ class AutoAddFromMagento
                 'media_id' => "",
                 "data_type" => ""
             ];
-            $this->getInsertDataTable($insert_data);
+            //$this->getInsertDataTable($insert_data);
+			$logger->info("Error  ". $e->getMessage());
         }
     }
 

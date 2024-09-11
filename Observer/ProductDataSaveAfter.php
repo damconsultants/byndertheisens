@@ -167,6 +167,9 @@ class ProductDataSaveAfter implements ObserverInterface
         $all_meta_properties = $metaProperty_collection = $this->metaPropertyCollectionFactory->create()->getData();
         $collection_data_value = [];
         $collection_data_slug_val = [];
+        /** In version 1.0.8 we will change this direct resource uses */
+		$connection = $this->_resource->getConnection();
+        $tableName = "bynder_cron_data";
         $image_coockie_id = $this->cookieManager->getCookie('image_coockie_id');
         $doc_coockie_id = $this->cookieManager->getCookie('doc_coockie_id');
         if ($image_coockie_id != 0) {

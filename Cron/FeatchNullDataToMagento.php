@@ -767,7 +767,11 @@ class FeatchNullDataToMagento
                     $type = [];
                     foreach ($image_detail as $img) {
                         $type[] = $img['item_type'];
+                        $image[] = $img['item_url'];
+                        $m_id[] = $img['bynder_md_id'];
+                        $this->getDeleteMedaiDataTable($product_sku_key, $img['bynder_md_id']);
                     }
+                    $this->getInsertMedaiDataTable($product_sku_key, $m_id, $product_ids, $storeId);
                     $flag = 0;
                     if (in_array("IMAGE", $type) && in_array("VIDEO", $type)) {
                         $flag = 1;

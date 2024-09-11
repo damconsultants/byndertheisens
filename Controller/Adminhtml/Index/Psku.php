@@ -120,6 +120,9 @@ class Psku extends \Magento\Backend\App\Action
                 foreach ($productSku as $sku) {
                     if ($sku != "") {
                         $bd_sku = trim(preg_replace('/[^A-Za-z0-9]/', '_', $sku));
+						$storeId = $this->storeManagerInterface->getStore()->getId();
+						$_product = $this->_productRepository->get($bd_sku);
+						$product_ids = $_product->getId();
                         $get_data = $this->datahelper->getImageSyncWithProperties(
                             $bd_sku,
                             $property_id,
@@ -150,6 +153,16 @@ class Psku extends \Magento\Backend\App\Action
                                     }
                                     
                                 } else {
+									$updated_values = [
+										'bynder_multi_img' => null,
+										'bynder_isMain' => null,
+										'bynder_auto_replace' => null
+									];
+									$this->productAction->updateAttributes(
+										[$product_ids],
+										$updated_values,
+										$storeId
+									);
                                     $insert_data = [
                                         "sku" => $sku,
                                         "message" => $convert_array['data'],
