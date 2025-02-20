@@ -40,11 +40,4 @@ class DeleteSyncData extends Action
         }
         return $resultRedirect->setPath('bynder/index/sync');
     }
-    /**
-     * Is Allowed
-     */
-    public function _isAllowed()
-    {
-        return $this->_authorization->isAllowed('DamConsultants_BynderTheisens::delete');
-    }
 }

@@ -105,7 +105,17 @@ li#menu-damconsultants-bynder-menu>a:before {
     width: calc(25% - 10px);
     margin: 5px;
 }
+li.item-menu-item5.parent.level-1 {
+    margin-bottom: 1.5rem;
+}
 
+li.item-menu-item6.parent.level-1 {
+    margin-bottom: 1.5rem;
+}
+
+li.item-menu-item7.parent.level-1 {
+    margin-bottom: 1.5rem;
+}
 #btn_del {
     position: relative;
     top: 15px;

@@ -2,15 +2,15 @@
 <listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
     <argument name="data" xsi:type="array">
         <item name="js_config" xsi:type="array">
-            <item name="provider" xsi:type="string">bynder_index_delete.bynder_index_delete_data_source</item>
-            <item name="deps" xsi:type="string">bynder_index_delete.bynder_index_delete_data_source</item>
+            <item name="provider" xsi:type="string">bynder_index_replace.bynder_index_replace_data_source</item>
+            <item name="deps" xsi:type="string">bynder_index_replace.bynder_index_replace_data_source</item>
         </item>
         <item name="spinner" xsi:type="string">spinner_columns</item>
     </argument>
     <dataSource name="nameOfDataSource">
         <argument name="dataProvider" xsi:type="configurableObject">
-            <argument name="class" xsi:type="string">DamConsultants\BynderTheisens\Ui\DataProvider\Product\DeleteProvider</argument>
-            <argument name="name" xsi:type="string">bynder_index_delete_data_source</argument>
+            <argument name="class" xsi:type="string">DamConsultants\BynderTheisens\Ui\DataProvider\Product\AutoReplaceProvider</argument>
+            <argument name="name" xsi:type="string">bynder_index_replace_data_source</argument>
             <argument name="primaryFieldName" xsi:type="string">id</argument>
             <argument name="requestFieldName" xsi:type="string">id</argument>
             <argument name="data" xsi:type="array">
@@ -34,7 +34,7 @@
         <massaction name="listing_massaction">
             <argument name="data" xsi:type="array">
                 <item name="data" xsi:type="array">
-                <item name="selectProvider" xsi:type="string">bynder_index_delete.bynder_index_delete.bynder_index_delete_columns.ids</item>
+                <item name="selectProvider" xsi:type="string">bynder_index_replace.bynder_index_replace.bynder_index_replace_columns.ids</item>
                 <item name="displayArea" xsi:type="string">bottom</item>
                 <item name="indexField" xsi:type="string">id</item>
                 </item>
@@ -44,12 +44,12 @@
                 <item name="config" xsi:type="array">
                     <item name="type" xsi:type="string">delete</item>
                     <item name="label" xsi:type="string" translate="true">Delete</item>
-                    <item name="url" xsi:type="url" path="bynder/index/massdeletecrondata"/>
+                    <item name="url" xsi:type="url" path="bynder/index/massdeletecronautodata"/>
                     <item name="confirm" xsi:type="array">
                         <item name="title" xsi:type="string" translate="true">Delete Data?</item>
                         <item name="message" xsi:type="string" translate="true">Are you sure you want to delete the selected Data?</item>
                     </item>
-					<item name="aclResource" xsi:type="string">DamConsultants_BynderTheisens::cron_mass_delete</item>
+					<item name="aclResource" xsi:type="string">DamConsultants_BynderTheisens::autocron_delete</item>
                 </item>
                 </argument>
             </action>
@@ -62,7 +62,7 @@
                     <item name="storageConfig" xsi:type="array">
                         <item name="saveUrl" xsi:type="url" path="mui/bookmark/save"/>
                         <item name="deleteUrl" xsi:type="url" path="mui/bookmark/delete"/>
-                        <item name="namespace" xsi:type="string">bynder_index_delete</item>
+                        <item name="namespace" xsi:type="string">bynder_index_replace</item>
                     </item>
                 </item>
             </argument>
@@ -71,7 +71,7 @@
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="columnsData" xsi:type="array">
-                        <item name="provider" xsi:type="string">bynder_index_delete.bynder_index_delete.spinner_columns</item>
+                        <item name="provider" xsi:type="string">bynder_index_replace.bynder_index_replace.spinner_columns</item>
                     </item>
                     <item name="component" xsi:type="string">Magento_Ui/js/grid/controls/columns</item>
                     <item name="displayArea" xsi:type="string">dataGridActions</item>
@@ -85,13 +85,13 @@
                     <item name="displayArea" xsi:type="string">dataGridFilters</item>
                     <item name="dataScope" xsi:type="string">filters</item>
                     <item name="storageConfig" xsi:type="array">
-                        <item name="provider" xsi:type="string">bynder_index_delete.bynder_index_delete.listing_top.bookmarks</item>
+                        <item name="provider" xsi:type="string">bynder_index_replace.bynder_index_replace.listing_top.bookmarks</item>
                         <item name="namespace" xsi:type="string">current.filters</item>
                     </item>
                     <item name="childDefaults" xsi:type="array">
-                        <item name="provider" xsi:type="string">bynder_index_delete.bynder_index_delete.listing_top.listing_filters</item>
+                        <item name="provider" xsi:type="string">bynder_index_replace.bynder_index_replace.listing_top.listing_filters</item>
                         <item name="imports" xsi:type="array">
-                            <item name="visible" xsi:type="string">bynder_index_delete.bynder_index_delete.listing_top.bookmarks:current.columns.${ $.index }.visible</item>
+                            <item name="visible" xsi:type="string">bynder_index_replace.bynder_index_replace.listing_top.bookmarks:current.columns.${ $.index }.visible</item>
                         </item>
                     </item>
                 </item>
@@ -102,7 +102,7 @@
                         <item name="dataScope" xsi:type="string">id</item>
                         <item name="label" xsi:type="string" translate="true">ID</item>
                         <item name="childDefaults" xsi:type="array">
-                            <item name="provider" xsi:type="string">bynder_index_delete.bynder_index_delete.listing_top.listing_filters</item>
+                            <item name="provider" xsi:type="string">bynder_index_replace.bynder_index_replace.listing_top.listing_filters</item>
                         </item>
                     </item>
                 </argument>
@@ -130,10 +130,10 @@
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="storageConfig" xsi:type="array">
-                        <item name="provider" xsi:type="string">bynder_index_delete.bynder_index_delete.listing_top.bookmarks</item>
+                        <item name="provider" xsi:type="string">bynder_index_replace.bynder_index_replace.listing_top.bookmarks</item>
                         <item name="namespace" xsi:type="string">current.paging</item>
                     </item>
-                    <item name="selectProvider" xsi:type="string">bynder_index_delete.bynder_index_delete.spinner_columns.ids</item>
+                    <item name="selectProvider" xsi:type="string">bynder_index_replace.bynder_index_replace.spinner_columns.ids</item>
                     <item name="displayArea" xsi:type="string">bottom</item>
                 </item>
             </argument>
@@ -166,14 +166,25 @@
                 </item>
             </argument>
         </column>
-		<column name="media_id">
+        <column name="bynder_data">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="filter" xsi:type="string">text</item>
-                    <item name="label" xsi:type="string" translate="true">Media Id</item>
+                    <item name="label" xsi:type="string" translate="true">BynderTheisens Data</item>
                 </item>
             </argument>
         </column>
+        <column name="bynder_data_type" class="DamConsultants\BynderTheisens\Ui\Component\Listing\Column\DataType">
+			<argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">DamConsultants\BynderTheisens\Model\Config\Source\DataType</item>
+				<item name="config" xsi:type="array">
+					<item name="filter" xsi:type="string">select</item>
+                    <item name="dataType" xsi:type="string">select</item>
+					<item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
+					<item name="label" xsi:type="string" translate="true">Data Type</item>
+				</item>
+			</argument>
+		</column>
         <column name="created_at" class="Magento\Ui\Component\Listing\Columns\Date">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
@@ -184,11 +195,11 @@
                 </item>
             </argument>
         </column>
-        <actionsColumn name="delete_action" class="DamConsultants\BynderTheisens\Ui\Component\Listing\Column\DeleteActionCronDelete">
+        <actionsColumn name="delete_action" class="DamConsultants\BynderTheisens\Ui\Component\Listing\Column\DeleteActionCronAuto">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="indexField" xsi:type="string">id</item>
-                    <item name="viewUrlPath" xsi:type="string">bynder/index/deletecronsync</item>
+                    <item name="viewUrlPath" xsi:type="string">bynder/index/deletecronsyncautodata</item>
                     <item name="urlEntityParamName" xsi:type="string">id</item>
                     <item name="confirm" xsi:type="array">
                         <item name="title" xsi:type="string" translate="true">Delete Data?</item>

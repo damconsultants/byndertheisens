@@ -5,6 +5,7 @@ use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Ui\Component\MassAction\Filter;
+use Magento\Framework\AuthorizationInterface;
 use DamConsultants\BynderTheisens\Model\ResourceModel\Collection\BynderConfigSyncDataCollectionFactory;
 
 class MassDeleteSyncData extends Action
@@ -21,6 +22,7 @@ class MassDeleteSyncData extends Action
      * @var $bynderFactory
      */
     protected $bynderFactory;
+	protected $authorization;
     /**
      * Mass Delete
      *
@@ -33,12 +35,21 @@ class MassDeleteSyncData extends Action
         Context $context,
         Filter $filter,
         BynderConfigSyncDataCollectionFactory $collectionFactory,
+		AuthorizationInterface $authorization,
         \DamConsultants\BynderTheisens\Model\BynderConfigSyncDataFactory $bynderFactory
     ) {
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
         $this->bynderFactory = $bynderFactory;
+		$this->authorization = $authorization;
         parent::__construct($context);
+    }
+	/**
+     * Is Allowed
+     */
+    public function _isAllowed()
+    {
+        return $this->authorization->isAllowed('DamConsultants_BynderTheisens::massdelete');
     }
     /**
      * Execute
@@ -58,12 +69,5 @@ class MassDeleteSyncData extends Action
             $this->messageManager->addError(__($e->getMessage()));
         }
         return $this->resultFactory->create(ResultFactory::TYPE_REDIRECT)->setPath('bynder/index/sync');
-    }
-    /**
-     * Is Allowed
-     */
-    public function _isAllowed()
-    {
-        return $this->_authorization->isAllowed('DamConsultants_BynderTheisens::delete');
     }
 }

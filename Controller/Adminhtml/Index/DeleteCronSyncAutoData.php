@@ -4,21 +4,22 @@ namespace DamConsultants\BynderTheisens\Controller\Adminhtml\Index;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 
-class DeleteCronSyncData extends Action
+class DeleteCronSyncAutoData extends Action
 {
     /**
-     * @var $bynderSycDataFactory
+     * @var bynderSycDataFactory.
+     *
      */
     public $bynderSycDataFactory;
     /**
      * Closed constructor.
      *
      * @param Context $context
-     * @param DamConsultants\BynderTheisens\Model\BynderSycDataFactory $BynderSycDataFactory
+     * @param DamConsultants\BynderTheisens\Model\BynderAutoReplaceDataFactory $BynderSycDataFactory
      */
     public function __construct(
         Context $context,
-        \DamConsultants\BynderTheisens\Model\BynderSycDataFactory $BynderSycDataFactory
+        \DamConsultants\BynderTheisens\Model\BynderAutoReplaceDataFactory $BynderSycDataFactory
     ) {
         $this->bynderSycDataFactory = $BynderSycDataFactory;
         parent::__construct($context);
@@ -38,6 +39,6 @@ class DeleteCronSyncData extends Action
         } catch (\Exception $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
         }
-        return $resultRedirect->setPath('bynder/index/grid');
+        return $resultRedirect->setPath('bynder/index/replacecrongrid');
     }
 }

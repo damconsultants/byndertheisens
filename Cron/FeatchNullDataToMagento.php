@@ -150,7 +150,8 @@ class FeatchNullDataToMagento
         if (count($productSku_array) > 0) {
             foreach ($productSku_array as $sku) {
                 if ($sku != "") {
-                    $bd_sku = trim(preg_replace('/[^A-Za-z0-9]/', '_', $sku));
+                    /* $bd_sku = trim(preg_replace('/[^A-Za-z0-9]/', '_', $sku)); */
+                    $bd_sku = $this->datahelper->replacetoSpecialString($sku);
                     $get_data = $this->datahelper->getImageSyncWithProperties($bd_sku, $property_id, $collection_value);
                     if (!empty($get_data) && $this->getIsJSON($get_data)) {
                         $respon_array = json_decode($get_data, true);

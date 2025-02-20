@@ -5,38 +5,40 @@ use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Ui\Component\MassAction\Filter;
-use DamConsultants\BynderTheisens\Model\ResourceModel\Collection\BynderSycDataCollectionFactory;
+use DamConsultants\BynderTheisens\Model\ResourceModel\Collection\BynderAutoReplaceDataCollectionFactory;
 use Magento\Framework\AuthorizationInterface;
 
-class MassDeleteCronSyncData extends Action
+class MassDeleteCronAutoData extends Action
 {
     /**
-     * @var $collectionFactory
+     * @var collectionFactory.
+     *
      */
     public $collectionFactory;
     /**
-     * @var $filter
+     * @var filter.
+     *
      */
     public $filter;
     /**
-     * @var $bynderFactory
+     * @var bynderFactory.
+     *
      */
     protected $bynderFactory;
 	protected $authorization;
     /**
-     * Mass Delete
-     *
+     * Get Sku.
      * @param Context $context
      * @param Filter $filter
-     * @param BynderSycDataCollectionFactory $collectionFactory
-     * @param \DamConsultants\BynderTheisens\Model\BynderSycDataFactory $bynderFactory
+     * @param BynderAutoReplaceDataCollectionFactory $collectionFactory
+     * @param \DamConsultants\BynderTheisens\Model\BynderAutoReplaceDataFactory $bynderFactory
      */
     public function __construct(
         Context $context,
         Filter $filter,
-        BynderSycDataCollectionFactory $collectionFactory,
+        BynderAutoReplaceDataCollectionFactory $collectionFactory,
 		AuthorizationInterface $authorization,
-        \DamConsultants\BynderTheisens\Model\BynderSycDataFactory $bynderFactory
+        \DamConsultants\BynderTheisens\Model\BynderAutoReplaceDataFactory $bynderFactory
     ) {
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
@@ -45,14 +47,18 @@ class MassDeleteCronSyncData extends Action
         parent::__construct($context);
     }
 	/**
-     * Is Allowed
+     * Execute
+     *
+     * @return $this
      */
     public function _isAllowed()
     {
-        return $this->authorization->isAllowed('DamConsultants_BynderTheisens::cron_massdelete');
+        return $this->authorization->isAllowed('DamConsultants_BynderTheisens::autocron_massdelete');
     }
     /**
      * Execute
+     *
+     * @return $this
      */
     public function execute()
     {
@@ -69,6 +75,6 @@ class MassDeleteCronSyncData extends Action
         } catch (\Exception $e) {
             $this->messageManager->addError(__($e->getMessage()));
         }
-        return $this->resultFactory->create(ResultFactory::TYPE_REDIRECT)->setPath('bynder/index/grid');
+        return $this->resultFactory->create(ResultFactory::TYPE_REDIRECT)->setPath('bynder/index/replacecrongrid');
     }
 }

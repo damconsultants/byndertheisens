@@ -873,4 +873,15 @@ class Data extends AbstractHelper
         /*$response = '{"status":1,"data":[{"id":"48DADC72-8775-4CCC-81764EC55395E178"},{"id":"D49C3C3C-8091-4CA0-8D27C36BA14B15D7"}]}';
         return $response;*/
     }
+
+    /**
+     * replaceto special string
+     * @param string $og_sku
+     * @return string $new_string
+     */
+    public function replacetoSpecialString($og_sku) {
+        $utf_og_sku = iconv('UTF-8', 'ISO-8859-1', $og_sku); 
+        $new_string = preg_replace('/[^a-zA-Z0-9-]/', '_', $utf_og_sku);
+        return $new_string;
+    }    
 }

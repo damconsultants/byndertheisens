@@ -5,37 +5,64 @@
        <add id="DamConsultants_BynderTheisens::menu"
            title="Theisens Sync. Log" module="DamConsultants_BynderTheisens"
            sortOrder="10"
-           resource="Magento_Backend::content"
+           resource="DamConsultants_BynderTheisens::menu"
+           />
+		<add id="DamConsultants_BynderTheisens::menu_item5"
+           title="Meta properties setting" module="DamConsultants_BynderTheisens"
+           sortOrder="10" parent="DamConsultants_BynderTheisens::menu"
+           resource="DamConsultants_BynderTheisens::menu_item5"
+           />
+		<add id="DamConsultants_BynderTheisens::menu_item1"
+           title="Theisens MetaProperty " module="DamConsultants_BynderTheisens"
+           sortOrder="10" parent="DamConsultants_BynderTheisens::menu_item5"
+           action="bynder/index/metaproperty"
+           resource="DamConsultants_BynderTheisens::menu_item1"
            />
            <!-- START: new node -->
+		<add id="DamConsultants_BynderTheisens::menu_item6"
+           title="Cron Log" module="DamConsultants_BynderTheisens"
+           sortOrder="10" parent="DamConsultants_BynderTheisens::menu"
+           resource="DamConsultants_BynderTheisens::menu_item6"
+           />
        <add id="DamConsultants_BynderTheisens::menu_item"
            title="Cron Action Log" module="DamConsultants_BynderTheisens"
-           sortOrder="10" parent="DamConsultants_BynderTheisens::menu"
+           sortOrder="10" parent="DamConsultants_BynderTheisens::menu_item6"
            action="bynder/index/grid"
            resource="DamConsultants_BynderTheisens::menu_item"
            />
+		<add id="DamConsultants_BynderTheisens::menu_item3"
+           title="Replace Cron Action Log" module="DamConsultants_BynderTheisens"
+           sortOrder="10" parent="DamConsultants_BynderTheisens::menu_item6"
+           action="bynder/index/replacecrongrid"
+           resource="DamConsultants_BynderTheisens::menu_item3"
+           />
+		<add id="DamConsultants_BynderTheisens::menu_item4"
+           title="Delete Cron Action Log" module="DamConsultants_BynderTheisens"
+           sortOrder="10" parent="DamConsultants_BynderTheisens::menu_item6"
+           action="bynder/index/deletecrongrid"
+           resource="DamConsultants_BynderTheisens::menu_item4"
+           />
        <!-- END:   new node -->
        <!-- START: new node -->
+	   <add id="DamConsultants_BynderTheisens::menu_item7"
+           title="Manual sync Log" module="DamConsultants_BynderTheisens"
+           sortOrder="10" parent="DamConsultants_BynderTheisens::menu"
+           resource="DamConsultants_BynderTheisens::menu_item7"
+           />
        <add id="DamConsultants_BynderTheisens::menu_item2"
            title="Synchronization Log" module="DamConsultants_BynderTheisens"
-           sortOrder="10" parent="DamConsultants_BynderTheisens::menu"
+           sortOrder="10" parent="DamConsultants_BynderTheisens::menu_item7"
            action="bynder/index/sync"
            resource="DamConsultants_BynderTheisens::menu_item2"
            />
        <!-- END:   new node -->
         <!-- START: new node -->
-       <add id="DamConsultants_BynderTheisens::menu_item1"
-           title="Theisens MetaProperty " module="DamConsultants_BynderTheisens"
+       <add id="DamConsultants_BynderTheisens::menu_item8"
+           title="Configuration Settings" module="DamConsultants_BynderTheisens"
            sortOrder="10" parent="DamConsultants_BynderTheisens::menu"
-           action="bynder/index/metaproperty"
-           resource="DamConsultants_BynderTheisens::menu_item1"
+           resource="DamConsultants_BynderTheisens::menu_item8"
            />
-		<add id="DamConsultants_BynderTheisens::menu_item4"
-           title="Delete Cron Action Log" module="DamConsultants_BynderTheisens"
-           sortOrder="10" parent="DamConsultants_BynderTheisens::menu"
-           action="bynder/index/deletecrongrid"
-           resource="DamConsultants_BynderTheisens::menu_item4"
-           />
+       <add id="DamConsultants_BynderTheisens::settings" title="Configuration" module="DamConsultants_BynderTheisens" sortOrder="10" resource="Magento_Backend::content" parent="DamConsultants_BynderTheisens::menu_item8" action="adminhtml/system_config/edit/section/bynderconfig"/>
        <!-- END:   new node -->
    </menu>
 </config> 

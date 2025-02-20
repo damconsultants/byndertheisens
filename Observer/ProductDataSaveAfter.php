@@ -239,10 +239,10 @@ class ProductDataSaveAfter implements ObserverInterface
 
 				if ($old_bynder_array != "") {
 					$oldBynderArray = json_decode($old_bynder_array, true);
-					if (isset($oldBynderArray)) {
+					if (count($oldBynderArray) > 0) {
 						foreach ($oldBynderArray as $old_key => $old_val) {
 							$old_url_link = $old_val['item_url'];
-							$old_media_id = $old_val['bynder_md_id'];
+							$old_media_id = $old_val['bynder_md_id'];                            
 							$change_metapropeties_id = $remove_type = "";
 							$change_roles = "";
 							$deleted_sku_value = "";
@@ -591,7 +591,7 @@ class ProductDataSaveAfter implements ObserverInterface
      * Is Json
      *
      * @param string $sku
-     * @param string $m_id
+     * @param array $m_id
      * @return $this
      */
     public function getInsertMedaiDataTable($sku, $m_id)

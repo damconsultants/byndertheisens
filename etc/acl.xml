@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+   <acl>
+     <resources>
+        <resource id="Magento_Backend::admin">
+            <resource id="Magento_Backend::stores">
+                <resource id="Magento_Backend::stores_settings">
+                    <resource id="Magento_Config::config">
+                        <resource id="DamConsultants_BynderTheisens::config" title="BynderTheisens Credential" sortOrder="192012" />
+                        <resource id="DamConsultants_BynderTheisens::sync" title="BynderTheisens Manual sync" sortOrder="192013" />
+                        <resource id="DamConsultants_BynderTheisens::cron" title="BynderTheisens Cron" sortOrder="192014" />
+                    </resource>
+                </resource>
+            </resource>
+            <resource id="DamConsultants_BynderTheisens::menu" title="BynderTheisens Menu">
+				<resource id="DamConsultants_BynderTheisens::menu_item5" title="BynderTheisens Submenu">
+                    <resource id="DamConsultants_BynderTheisens::menu_item1" title="BynderTheisens Meta Property" sortOrder="192005" />
+                </resource>
+				<resource id="DamConsultants_BynderTheisens::menu_item6" title="BynderTheisens Cron Log">
+                    <resource id="DamConsultants_BynderTheisens::menu_item" title="BynderTheisens Cron Action Log" sortOrder="192006">
+						<resource id="DamConsultants_BynderTheisens::resync" title="BynderTheisens ReSync Link" sortOrder="192006"/>
+						<resource id="DamConsultants_BynderTheisens::cron_delete" title="BynderTheisens Delete Link" sortOrder="192006"/>
+						<resource id="DamConsultants_BynderTheisens::mass_resync" title="BynderTheisens Mass Re-Sync Data" sortOrder="192006"/>
+						<resource id="DamConsultants_BynderTheisens::cron_massdelete" title="BynderTheisens Mass Delete Data" sortOrder="192006"/>
+					</resource>
+					<resource id="DamConsultants_BynderTheisens::menu_item3" title="BynderTheisens Replace Cron Action Log" sortOrder="192007">
+						<resource id="DamConsultants_BynderTheisens::autocron_delete" title="BynderTheisens Replace Cron Delete Link" sortOrder="192007"/>
+						<resource id="DamConsultants_BynderTheisens::autocron_massdelete" title="BynderTheisens Replace Cron Mass Delete Link" sortOrder="192007"/>
+					</resource>
+					<resource id="DamConsultants_BynderTheisens::menu_item4" title="BynderTheisens Delete Cron Action Log" sortOrder="192008">
+						<resource id="DamConsultants_BynderTheisens::deletecron_delete" title="BynderTheisens Delete Cron Delete Link" sortOrder="192008"/>
+						<resource id="DamConsultants_BynderTheisens::cron_mass_delete" title="BynderTheisens Delete Cron Mass Delete Link" sortOrder="192008"/>
+					</resource>
+                </resource>
+				<resource id="DamConsultants_BynderTheisens::menu_item7" title="BynderTheisens Manual sync Log">
+                    <resource id="DamConsultants_BynderTheisens::menu_item2" title="BynderTheisens Synchronization Log" sortOrder="192009">
+						<resource id="DamConsultants_BynderTheisens::sync_delete" title="BynderTheisens Manual Sync Delete Link" sortOrder="192009"/>
+						<resource id="DamConsultants_BynderTheisens::massdelete" title="BynderTheisens Manual Sync Mass Delete Link" sortOrder="192009"/>
+					</resource>
+                </resource>
+				<resource id="DamConsultants_BynderTheisens::menu_item8" title="BynderTheisens Configuration Settings">
+                    <resource id="DamConsultants_BynderTheisens::settings" title="BynderTheisens Configuration Settings" sortOrder="192010" />
+                </resource>
+			</resource>
+        </resource>
+     </resources>
+   </acl>
+</config>

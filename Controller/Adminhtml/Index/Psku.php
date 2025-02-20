@@ -113,98 +113,103 @@ class Psku extends \Magento\Backend\App\Action
 
         $collection_value = $meta_properties['collection_data_value'];
         $collection_slug_val = $meta_properties['collection_data_slug_val'];
-
-        if (strlen($product_sku) > 0) {
-            $productSku = explode(",", trim($product_sku));
-            if (count($productSku) > 0) {
-                foreach ($productSku as $sku) {
-                    if ($sku != "") {
-                        $bd_sku = trim(preg_replace('/[^A-Za-z0-9]/', '_', $sku));
-						$storeId = $this->storeManagerInterface->getStore()->getId();
-						$_product = $this->_productRepository->get($bd_sku);
-						$product_ids = $_product->getId();
-                        $get_data = $this->datahelper->getImageSyncWithProperties(
-                            $bd_sku,
-                            $property_id,
-                            $collection_value
-                        );
-                        $getIsJson = $this->getIsJSON($get_data);
-                        if (!empty($get_data) && $getIsJson) {
-                            $respon_array = json_decode($get_data, true);
-                            if ($respon_array['status'] == 1) {
-                                $convert_array = json_decode($respon_array['data'], true);
-                                if ($convert_array['status'] == 1) {
-                                    $current_sku = $sku;
-                                    try {
-                                        $this->getDataItem(
-                                            $select_attribute,
-                                            $convert_array,
-                                            $collection_slug_val,
-                                            $current_sku
-                                        );
-                                    } catch (Exception $e) {
-                                        $insert_data = [
-                                            "sku" => $sku,
-                                            "message" => $e->getMessage(),
-                                            "data_type" => "",
-                                            "lable" => "0"
-                                        ];
-                                        $this->getInsertDataTable($insert_data);
-                                    }
-                                    
-                                } else {
-									$updated_values = [
-										'bynder_multi_img' => null,
-										'bynder_isMain' => null,
-										'bynder_auto_replace' => null
+		try {
+			if (strlen($product_sku) > 0) {
+				$productSku = explode(",", trim($product_sku));
+				if (count($productSku) > 0) {
+					foreach ($productSku as $sku) {
+						if ($sku != "") {
+							/* $bd_sku = trim(preg_replace('/[^A-Za-z0-9]-/', '_', $sku)); */
+                            $bd_sku = $this->datahelper->replacetoSpecialString($sku);
+							$storeId = $this->storeManagerInterface->getStore()->getId();
+							$_product = $this->_productRepository->get($sku);
+							$product_ids = $_product->getId();
+							$get_data = $this->datahelper->getImageSyncWithProperties(
+								$bd_sku,
+								$property_id,
+								$collection_value
+							);
+							$getIsJson = $this->getIsJSON($get_data);
+							if (!empty($get_data) && $getIsJson) {
+								$respon_array = json_decode($get_data, true);
+								if ($respon_array['status'] == 1) {
+									$convert_array = json_decode($respon_array['data'], true);
+									if ($convert_array['status'] == 1) {
+										$current_sku = $sku;
+										try {
+											$this->getDataItem(
+												$select_attribute,
+												$convert_array,
+												$collection_slug_val,
+												$current_sku
+											);
+										} catch (Exception $e) {
+											$insert_data = [
+												"sku" => $sku,
+												"message" => $e->getMessage(),
+												"data_type" => "",
+												"lable" => "0"
+											];
+											$this->getInsertDataTable($insert_data);
+										}
+										
+									} else {
+										$updated_values = [
+											'bynder_multi_img' => null,
+											'bynder_isMain' => null,
+											'bynder_auto_replace' => null
+										];
+										$this->productAction->updateAttributes(
+											[$product_ids],
+											$updated_values,
+											$storeId
+										);
+										$insert_data = [
+											"sku" => $sku,
+											"message" => $convert_array['data'],
+											"data_type" => "",
+											"lable" => "0"
+										];
+										$this->getInsertDataTable($insert_data);
+									}
+								} else {
+									$insert_data = [
+									"sku" => $sku,
+									"message" => 'Please Select The Metaproperty First.....',
+									"data_type" => "",
+									"lable" => "0"
 									];
-									$this->productAction->updateAttributes(
-										[$product_ids],
-										$updated_values,
-										$storeId
+									$this->getInsertDataTable($insert_data);
+									$result_data = $result->setData(
+										['status' => 0, 'message' => 'Please check Bynder Synchronization. Action Log.....']
 									);
-                                    $insert_data = [
-                                        "sku" => $sku,
-                                        "message" => $convert_array['data'],
-                                        "data_type" => "",
-                                        "lable" => "0"
-                                    ];
-                                    $this->getInsertDataTable($insert_data);
-                                }
-                            } else {
-                                $insert_data = [
-                                "sku" => $sku,
-                                "message" => 'Please Select The Metaproperty First.....',
-                                "data_type" => "",
-                                "lable" => "0"
-                                ];
-                                $this->getInsertDataTable($insert_data);
-                                $result_data = $result->setData(
-                                    ['status' => 0, 'message' => 'Please check Bynder Synchronization. Action Log.....']
-                                );
-                                return $result_data;
-                            }
-                        } else {
-                            $result_data = $result->setData(
-                                [
-                                'status' => 0,
-                                'message' => 'Something went wrong from API side, Please contact to support team!'
-                                              ]
-                            );
-                            return $result_data;
-                        }
-                    }
-                }
-            }
-            $result_data = $result->setData([
-                'status' => 1,
-                'message' => 'Data Sync Successfully.Please check Bynder Synchronization Log.!'
-            ]);
+									return $result_data;
+								}
+							} else {
+								$result_data = $result->setData(
+									[
+									'status' => 0,
+									'message' => 'Something went wrong from API side, Please contact to support team!'
+												  ]
+								);
+								return $result_data;
+							}
+						}
+					}
+				}
+				$result_data = $result->setData([
+					'status' => 1,
+					'message' => 'Data Sync Successfully.Please check Bynder Synchronization Log.!'
+				]);
+				return $result_data;
+			} else {
+				$result_data = $result->setData(['status' => 0, 'message' => 'Please enter atleast one SKU.']);
+				return $result_data;
+			}
+		} catch (Exception $e) {
+			$result_data = $result->setData(['status' => 0, 'message' => $e->getMessage()]);
             return $result_data;
-        } else {
-            $result_data = $result->setData(['status' => 0, 'message' => 'Please enter atleast one SKU.']);
-            return $result_data;
-        }
+		}
     }
 
     /**
@@ -341,6 +346,7 @@ class Psku extends \Magento\Backend\App\Action
         $data_arr = [];
         $data_val_arr = [];
         $result = $this->resultJsonFactory->create();
+		//echo "<pre>"; print_r($convert_array); exit;
         if ($convert_array['status'] == 1) {
             foreach ($convert_array['data'] as $data_value) {
                 if ($select_attribute == $data_value['type']) {
@@ -412,9 +418,20 @@ class Psku extends \Magento\Backend\App\Action
                         array_push($data_val_arr, $data_p);
                     } else {
                         if ($select_attribute == 'video') {
-                            $video_link = $image_data["image_link"] . '@@' . $image_data["webimage"];
+                            $video_link = "";
+                            if(isset($data_value["videoPreviewURLs"][0])){
+                                $video_link = $data_value["videoPreviewURLs"][0] . '@@' . $image_data["thul"];
+                            }else{
+                                $video_link = $image_data["image_link"] . '@@' . $image_data["webimage"];
+                            }
                             array_push($data_arr, $data_sku[0]);
-                            $data_p = ["sku" => $data_sku[0], "url" => $video_link];
+                            $data_p = [
+								"sku" => $data_sku[0],
+								"url" => [$video_link],
+								'magento_image_role' => $new_magento_role_list,
+								'image_alt_text' => $new_bynder_alt_text,
+								'bynder_media_id_new' => $new_bynder_mediaid_text
+							];
                             array_push($data_val_arr, $data_p);
 
                         } else {
@@ -425,7 +442,6 @@ class Psku extends \Magento\Backend\App\Action
                             $data_p = ["sku" => $data_sku[0], "url" => $doc_link];
                             array_push($data_val_arr, $data_p);
                         }
-
                     }
                 }
             }
@@ -764,15 +780,15 @@ class Psku extends \Magento\Backend\App\Action
                         }
                     }
                     foreach ($new_video_array as $vv => $video_value) {
-                        $item_url = explode("?", $video_value);
-                        $thum_url = explode("@@", $video_value);
+                        $item_url = explode("@@", $video_value);
+                        //$thum_url = explode("@@", $video_value);
                         $media_video_explode = explode("/", $item_url[0]);
                         if (!in_array($item_url[0], $old_item_url)) {
                             $video_detail[] = [
                                 "item_url" => $item_url[0],
                                 "image_role" => null,
                                 "item_type" => 'VIDEO',
-                                "thum_url" => $thum_url[1],
+                                "thum_url" => $item_url[1],
                                 "bynder_md_id" => $bynder_media_id[$vv]
                             ];
                         }
@@ -822,14 +838,14 @@ class Psku extends \Magento\Backend\App\Action
                     $video_detail = [];
                     foreach ($new_video_array as $video_value) {
                         $item_url = explode("?", $video_value);
-                        $thum_url = explode("@@", $video_value);
+                        //$thum_url = explode("@@", $video_value);
                         $media_video_explode = explode("/", $item_url[0]);
 
                         $video_detail[] = [
                             "item_url" => $item_url[0],
                             "image_role" => null,
                             "item_type" => 'VIDEO',
-                            "thum_url" => $thum_url[1],
+                            "thum_url" => $item_url[1],
                             "bynder_md_id" => $bynder_media_id
                         ];
                     }

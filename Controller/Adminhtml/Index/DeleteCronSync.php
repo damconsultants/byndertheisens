@@ -40,11 +40,4 @@ class DeleteCronSync extends Action
         }
         return $resultRedirect->setPath('bynder/index/deletecrongrid');
     }
-    /**
-     * Execute
-     */
-    public function _isAllowed()
-    {
-        return $this->_authorization->isAllowed('DamConsultants_BynderTheisens::delete');
-    }
 }

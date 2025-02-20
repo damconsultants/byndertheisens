@@ -6,7 +6,7 @@ use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\Framework\AuthorizationInterface;
 
-class DeleteAction extends \Magento\Ui\Component\Listing\Columns\Column
+class DeleteActionCronDelete extends \Magento\Ui\Component\Listing\Columns\Column
 {
     /**
      * @var urlBuilder
@@ -30,8 +30,8 @@ class DeleteAction extends \Magento\Ui\Component\Listing\Columns\Column
         array $components = [],
         array $data = []
     ) {
-		$this->authorization = $authorization;
         $this->urlBuilder = $urlBuilder;
+		$this->authorization = $authorization;
         parent::__construct($context, $uiComponentFactory, $components, $data);
     }
     /**
@@ -44,7 +44,7 @@ class DeleteAction extends \Magento\Ui\Component\Listing\Columns\Column
     {
         if (isset($dataSource['data']['items'])) {
             foreach ($dataSource['data']['items'] as &$item) {
-                if (isset($item['id']) && $this->authorization->isAllowed('DamConsultants_BynderTheisens::sync_delete')) {
+                if (isset($item['id']) && $this->authorization->isAllowed('DamConsultants_BynderTheisens::deletecron_delete')) {
                     $viewUrlPath = $this->getData('config/viewUrlPath');
                     $urlEntityParamName = $this->getData('config/urlEntityParamName');
                     $item[$this->getData('name')] = [
