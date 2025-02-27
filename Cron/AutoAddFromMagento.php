@@ -155,6 +155,7 @@ class AutoAddFromMagento
 					$_product = $this->_productRepository->get($sku);
 					$product_ids = $_product->getId();
                     $get_data = $this->datahelper->getImageSyncWithProperties($bd_sku, $property_id, $collection_value);
+					
                     if (!empty($get_data) && $this->getIsJSON($get_data)) {
                         $respon_array = json_decode($get_data, true);
                         if ($respon_array['status'] == 1) {
@@ -689,7 +690,7 @@ class AutoAddFromMagento
 										"item_type" => $img['item_type'],
 										"thum_url" => $img['thum_url'],
 										"bynder_md_id" => $img['bynder_md_id'],
-										"is_import" => $img['is_import']
+										"is_import" => isset($img['is_import'])?$img['is_import']:0
 									];
 								}
 							}

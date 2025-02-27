@@ -631,7 +631,7 @@ class Psku extends \Magento\Backend\App\Action
 										"item_type" => $img['item_type'],
 										"thum_url" => $img['thum_url'],
 										"bynder_md_id" => $img['bynder_md_id'],
-										"is_import" => $img['is_import']
+										"is_import" => isset($img['is_import'])?$img['is_import']:0
 									];
 								}
 							}

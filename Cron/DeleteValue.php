@@ -153,16 +153,20 @@ class DeleteValue
             $bynder_auth["last_cron_time"] = $current_time;
             $get_api_delete_details = $this->datahelper->getCheckBynderSideDeleteData($bynder_auth);
             $response = json_decode($get_api_delete_details, true);
-            if (count($response) > 0) {
-                if ($response['status'] == 1) {
-                    if (count($response['data']) > 0) {
-                        foreach ($response['data'] as $delete_api_data) {
-                            if (isset($delete_api_data["id"])) {
-                                $isDelete = $this->getDeleteMedaiDataTable($delete_api_data['id']);
-                                if ($isDelete) {
-                                    $this->getInsertApiMediaTable($delete_api_data['id']);
-                                }
-                            }
+			if (!is_array($response)) {
+				$this->logger->error("Delete Cron: Invalid JSON response from API - " . $get_api_delete_details);
+				return false;
+			}
+			if (!isset($response['status']) || !isset($response['data']) || !is_array($response['data'])) {
+                $this->logger->info("Delete Cron: No valid 'status' or 'data' received.");
+                return false;
+            }
+            if ($response['status'] == 1 && count($response['data']) > 0) {
+                foreach ($response['data'] as $delete_api_data) {
+                    if (isset($delete_api_data["id"])) {
+                        $isDelete = $this->getDeleteMedaiDataTable($delete_api_data['id']);
+                        if ($isDelete) {
+                            $this->getInsertApiMediaTable($delete_api_data['id']);
                         }
                     }
                 }
